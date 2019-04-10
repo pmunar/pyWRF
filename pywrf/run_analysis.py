@@ -3,9 +3,11 @@ from pyWRF.read_config import *
 import datetime
 import os
 from pyWRF import environ
+import sys
+
 
 class RunAnalysis:
-    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, run_hours=120,
+    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, server='GDAS',
                  hour_step=6):
 
         self.start_date = group_start_date   # datetime object format
@@ -13,9 +15,10 @@ class RunAnalysis:
         self.analysis_interval = self.end_date - self.start_date
         self.input_data = path_do_input_data
         self.ouput = path_to_output_data
-        self.run_hours = self.analysis_interval.days * 24
+        self.run_hours = self.analysis_interval.total_seconds() // 3600 + hour_step
         self.hour_step = hour_step
         self.interval_seconds = self.hour_step * 3600.
+        self.server = server
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
         self.WORK_DIR = os.getcwd()
@@ -31,13 +34,28 @@ class RunAnalysis:
         new_line = date_field[0] + " = '" + date_field[1] + "',"
         return new_line
 
+ canviar això per a que agafi lo que toca a cada línia
+    def _replacefield(self,file, searchExp, replaceExp):
+        for line in fileinput.input(file, inplace=1):
+            if searchExp in line:
+                line = line.replace(line, replaceExp)
+            sys.stdout.write(line)
+
 
     def _change_WPS_namelist_input_file(self):
         namelist_wps_in = open(self.WRF_DIR + '/WPS/namelist.wps', 'r')
         namelist_wps_out = open(self.WRF_DIR + '/WPS/temp_namelist.wps', 'w')
         lines = namelist_wps_in.readlines()
+        fields = ['start_date', 'end_date', 'interval_seconds']
+        for l in lines:
+            for f in fields:
+                if f in l:
+                    if f not fields[2]:
+                        l =
         lines[3] = self._write_times_field(lines[3], self.start_date)
         lines[4] = self._write_times_field(lines[4], self.end_date)
+        interval_seconds = lines[5].split('=')
+        lines[5] = interval_seconds[0] +' = '+self.hour_step*3600+','
         for l in lines:
             print(l[:-1], file=namelist_wps_out)
         namelist_wps_out.close()
@@ -53,6 +71,13 @@ class RunAnalysis:
             os.system('ln -s '+infile+' $WRF_DIR/DATA')
             date += datetime.timedelta(hours=self.hour_step)
 
+    def _link_vtables(self):
+        if self.server == 'GDAS' or self.server == 'GFS':
+            vtable = 'Vtable.GFS'
+        elif self.server == 'ERA-Interim' or self.server == 'ECMWF':
+            vtable = 'Vtable.ECMWF'
+        cwd = os.getcwd()
+        os.system('ln -sf '+cwd+'ungrib/Variable_Tables/'+vtable+' '+cwd+'/Vtabl')
 
     def run_wps(self):
         from pyWRF.read_config import working_directory
@@ -72,7 +97,7 @@ class RunAnalysis:
             except:
                 print('Geogrid did not generate log file')
 
-            os.system('ln -sf ungrib/Variable_Tables/Vtable.GFS '+self.WRF_DIR+'/WPS/Vtabl')
+            self._link_vtables()
             os.system('./WPS/link_grib.csh '+self.WRF_DIR+'/DATA/fnl_')
             os.system('./WPS/ungrib.exe >& ungrib_data.log')
             os.system('./WPS/metgrid.exe >& log.metgrid')

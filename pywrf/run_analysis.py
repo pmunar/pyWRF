@@ -1,21 +1,24 @@
+
+from pyWRF.read_config import *
+import datetime
 import os
+from pyWRF import environ
 
 class RunAnalysis:
     def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, run_hours=120,
                  hour_step=6):
 
-    self.start_date = group_start_date   # datetime object format
-    self.end_date = group_end_date       # datetime object format
-    self.analysis_interval = self.end_date - self.start_date
-    self.input_data = path_do_input_data
-    self.ouput = path_to_output_data
-    self.run_hours = self.analysis_interval.days * 24
-    self.hour_step = hour_step
-    self.interval_seconds = self.hour_step * 3600.
+        self.start_date = group_start_date   # datetime object format
+        self.end_date = group_end_date       # datetime object format
+        self.analysis_interval = self.end_date - self.start_date
+        self.input_data = path_do_input_data
+        self.ouput = path_to_output_data
+        self.run_hours = self.analysis_interval.days * 24
+        self.hour_step = hour_step
+        self.interval_seconds = self.hour_step * 3600.
 
-    self.WRF_DIR = get_wrf_dir()
-    self.WORK_DIR = os.getcwd()
-    self.namelist_in = open(self.WRF_DIR+'/WPS/namelist.wps', 'r')
+        self.WRF_DIR = environ.DIRS.get('WRF_DIR')
+        self.WORK_DIR = os.getcwd()
 
     def _write_times_field(self, line, date):
         year = date.year
@@ -30,28 +33,29 @@ class RunAnalysis:
 
 
     def _change_WPS_namelist_input_file(self):
-        namelist_out = open(self.WRF_DIR + '/WPS/temp_namelist.wps', 'w')
-        lines = self.namelist_in.readlines()
+        namelist_wps_in = open(self.WRF_DIR + '/WPS/namelist.wps', 'r')
+        namelist_wps_out = open(self.WRF_DIR + '/WPS/temp_namelist.wps', 'w')
+        lines = namelist_wps_in.readlines()
         lines[3] = self._write_times_field(lines[3], self.start_date)
         lines[4] = self._write_times_field(lines[4], self.end_date)
         for l in lines:
-            print(l[:-1], file=namelist_out)
-        namelist_out.close()
-        os.system('mv '+namelist_out.name+' '+self.namelist_in.name)
+            print(l[:-1], file=namelist_wps_out)
+        namelist_wps_out.close()
+        os.rename(namelist_wps_out.name, namelist_wps_in.name)
 
 
     def _link_input_data_to_WPS(self):
-        from lib.read_config import datetime_to_filename_format
+        from pyWRF.read_config import datetime_to_filename_format
         date = self.start_date
         while date <= self.end_date:
             date_filename_format = datetime_to_filename_format(date)
             infile = 'fnl_%s.grib2'%(date_filename_format)
             os.system('ln -s '+infile+' $WRF_DIR/DATA')
-            date += dt.timedelta(hours=self.hour_step)
+            date += datetime.timedelta(hours=self.hour_step)
 
 
     def run_wps(self):
-        from lib.read_config import working_directory
+        from pyWRF.read_config import working_directory
         self._change_WPS_namelist_input_file()
         self._link_input_data_to_WPS()
 
@@ -86,8 +90,8 @@ class RunAnalysis:
 
     def _change_WRF_namelist_input_file(self):
 
-        namelist_wrf_in = open(self.WRF_DIR+'/WRF3/test/em_real/namelist.input')
-        namelist_wrf_out = open(self.WRF_DIR+'/WRF3/test/em_real/temp_namelist.input', 'w')
+        namelist_wrf_in = open(self.WRF_DIR+'/WRFV3/test/em_real/namelist.input')
+        namelist_wrf_out = open(self.WRF_DIR+'/WRFV3/test/em_real/temp_namelist.input', 'w')
 
         lines = namelist_wrf_in.readlines()
 
@@ -112,11 +116,11 @@ class RunAnalysis:
 
         for l in lines:
             print(l[:-1], file=namelist_wrf_out)
-        os.system('mv ' + namelist_wrf_out.name + ' ' + namelist_wrf_in.name)
+        os.rename(namelist_wrf_out.name, namelist_wrf_in.name)
 
     def run_WRF(self):
-        from lib.read_config import working_directory
-        with working_directory(self.WRF_DIR+'WRFV3/test/em_real'):
+        from pyWRF.read_config import working_directory
+        with working_directory(self.WRF_DIR+'/WRFV3/test/em_real'):
             print('Moving to ' + os.getcwd())
             os.system('ln -sf '+self.WRF_DIR+'/WPS/met_em* .')
             self._change_WRF_namelist_input_file()
@@ -135,7 +139,7 @@ class RunAnalysis:
                     print('wrfinput_d03 created successfully')
                 if os.path.isfile(self.WRF_DIR + '/WRFV3/test/em_real/wrfbdy_d01') and os.stat(
                             self.WRF_DIR + '/WRFV3/test/em_real/wrfbdy_d01').st_size != 0:
-                print('wrfbdy_d01 created successfully')
+                    print('wrfbdy_d01 created successfully')
             except:
                 print('something went wrong. Files not created or with zero size')
 
@@ -149,7 +153,7 @@ class RunAnalysis:
                     print('wrfout_d02 created successfully')
                 if os.path.isfile(self.WRF_DIR + '/WRFV3/test/em_real/wrfout_d03_'+date_string_WRF) and os.stat(
                             self.WRF_DIR + '/WRFV3/test/em_real/wrfout_d03_'+date_string_WRF).st_size != 0:
-                print('wrfout_d03 created successfully')
+                    print('wrfout_d03 created successfully')
             except:
                 print('something went wrong. Output WRF Files not created or with zero size')
         print('We went back to ' + os.getcwd())

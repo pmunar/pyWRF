@@ -1,9 +1,11 @@
 #!/usr/bin/env python
-import sys
-from pyWRF.read_config import get_config_parameters, conf_date_to_datetime
-from pyWRF.read_and_unzip import gunzip_and_rename_files
-from pyWRF.run_analysis import RunAnalysis
 import datetime
+import sys
+
+from pyWRF import RunAnalysis
+from pyWRF import get_config_parameters, conf_date_to_datetime
+from pyWRF import gunzip_and_rename_files
+
 
 def check_length_of_analysis(start_date, end_date):
     delta = end_date - start_date
@@ -19,26 +21,42 @@ def get_stop_date_for_processing_last_group(end_date):
     return stop_time
 
 
-def __main__():
+data_path, wps_out, wrf_out, grads_out, start_date, end_date, group = get_config_parameters(sys.argv[1])
 
-    data_path, wps_out, wrf_out_grads_out, start_date, end_date, group = get_config_parameters(sys.argv[1])
-    gunzip_and_rename_files()
-    start_date_datetime = conf_date_to_datetime(start_date)
-    end_date_datetime = conf_date_to_datetime(end_date)
-    length_of_analysis = check_length_of_analysis(start_date_datetime, end_date_datetime)
-    print('The total time of the analysis is {:d} days {:d} hours'.format(length_of_analysis[0], length_of_analysis[1]))
-    number_of_groups = divmod(length_of_analysis[0], group)
+print('=========================================================')
+print('                     Summary')
+print('=========================================================')
+print('Path to the data:{}'.format(data_path))
+print('Path to the WPS output:{}'.format(wps_out))
+print('Path to the WRF output:{}'.format(wrf_out))
+print('Path to the GRADS output:{}'.format(grads_out))
+print('Starting date of analysis:{}'.format(start_date))
+print('Ending date of analysis:{}'.format(end_date))
+print('Days in each subgroup of analysis:{}'.format(group))
+print('=========================================================')
+print('=========================================================')
 
-    start_time = start_date_datetime
-    for n in range(number_of_groups[0] + 1):
-        stop_time = get_stop_date_for_processing(start_time, group)
-        if n == range(number_of_groups[0] + 1)[-1]:
-            stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
-        print('Analyzing times between {} and {}' + start_time, stop_time)
-        analysis = RunAnalysis(start_time, stop_time, data_path, wps_out)
-        analysis.run_wps()
-        analysis.run_WRF()
-        analysis.clean_directories()
+print('Unzipping files...')
+gunzip_and_rename_files()
+start_date_datetime = conf_date_to_datetime(start_date)
+end_date_datetime = conf_date_to_datetime(end_date)
+length_of_analysis = check_length_of_analysis(start_date_datetime, end_date_datetime)
 
-        start_time = stop_time + datetime.timedelta(hours=6)
+print('The total time of the analysis is {:d} days {:d} hours'.format(length_of_analysis[0], length_of_analysis[1]))
+
+number_of_groups = divmod(length_of_analysis[0], group)
+
+start_time = start_date_datetime
+for n in range(number_of_groups[0] + 1):
+    stop_time = get_stop_date_for_processing(start_time, group)
+    if n == range(number_of_groups[0] + 1)[-1]:
+        stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
+    print('Group {}'.format(n +1))
+    print('Analyzing times between {} and {}' + start_time, stop_time)
+    analysis = RunAnalysis(start_time, stop_time, data_path, wps_out)
+    analysis.run_wps()
+    analysis.run_WRF()
+    analysis.clean_directories()
+
+    start_time = stop_time + datetime.timedelta(hours=6)
 

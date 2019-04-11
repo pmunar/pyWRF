@@ -37,7 +37,7 @@ print('=========================================================')
 print('=========================================================')
 
 print('Unzipping files...')
-gunzip_and_rename_files()
+gunzip_and_rename_files(data_path)
 start_date_datetime = conf_date_to_datetime(start_date)
 end_date_datetime = conf_date_to_datetime(end_date)
 length_of_analysis = check_length_of_analysis(start_date_datetime, end_date_datetime)

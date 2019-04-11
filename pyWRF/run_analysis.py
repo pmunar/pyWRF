@@ -204,3 +204,5 @@ class RunAnalysis:
                 os.system('mv wrfinput_* ' + self.WORK_DIR + '/wrf_out')
                 os.system('mv wrfout_* '+self.WORK_DIR+'/wrf_out')
                 os.system('mv wrfbdy_* ' + self.WORK_DIR + '/wrf_out')
+            except:
+                print('There was a problem. Files were not created')

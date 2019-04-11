@@ -35,6 +35,9 @@ def __main__():
         if n == range(number_of_groups[0] + 1)[-1]:
             stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
         analysis = RunAnalysis(start_time, stop_time, )
+        analysis.run_wps()
+        analysis.run_WRF()
+        analysis.clean_directories()
 
         print('Analyzing times between +'start_time, stop_time, data_path, wps_out)
         start_time = stop_time + datetime.timedelta(hours=6)

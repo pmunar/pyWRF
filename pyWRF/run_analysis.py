@@ -23,44 +23,64 @@ class RunAnalysis:
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
         self.WORK_DIR = os.getcwd()
 
-    def _write_times_field(self, line, date):
-        year = date.year
-        month = date.month
-        day = date.day
-        hour = date.hour
-        date_to_write = '{:d}-{:02d}-{:02d}_{:02d}:00:00'.format(year, month, day, hour)
-        date_field = line.split('=')
-        date_field[1] = date_to_write + "','" + date_to_write + "','" + date_to_write
-        new_line = date_field[0] + " = '" + date_field[1] + "',"
-        return new_line
+    def _write_new_text_for_line_wps(self, field, value):
+        if type(value) == datetime.datetime:
+            year = value.year
+            month = value.month
+            day = value.day
+            hour = value.hour
+            date_to_write = '{:d}-{:02d}-{:02d}_{:02d}:00:00'.format(year, month, day, hour)
+            date_field = date_to_write + "','" + date_to_write + "','" + date_to_write
+            new_line = ' ' + field + " = '" + date_field + "',\n"
+            return new_line
+        elif type(value) == int or type(value) == float:
+            new_line = ' ' + field + " = " + str(value) + '\n'
+            return new_line
 
- canviar això per a que agafi lo que toca a cada línia
-    def _replacefield(self,file, searchExp, replaceExp):
-        for line in fileinput.input(file, inplace=1):
+    def _write_new_text_for_line_wrf(self, field, value):
+        if field == 'start_year':
+            field_to_write = ' {:s}                          = {:d}, {:d}, {:d},\n'.format(field, value.year,
+                                                                                           value.year, value.year)
+        if field == 'start_month':
+            field_to_write = ' {:s}                         = {:02d}, {:02d}, {:02d},\n'.format(field, value.month,
+                                                                                                value.month, value.month)
+        if field == 'start_day':
+            field_to_write = ' {:s}                           = {:02d}, {:02d}, {:02d},\n'.format(field, value.day,
+                                                                                                  value.day, value.day)
+        if field == 'start_hour':
+            field_to_write = ' {:s}                          = {:02d}, {:02d}, {:02d},\n'.format(field, value.hour,
+                                                                                                 value.hour, value.hour)
+        if field == 'end_year':
+            field_to_write = ' {:s}                            = {:d}, {:d}, {:d},\n'.format(field, value.year,
+                                                                                             value.year, value.year)
+        if field == 'end_month':
+            field_to_write = ' {:s}                           = {:02d}, {:02d}, {:02d},\n'.format(field, value.month,
+                                                                                                  value.month, value.month)
+        if field == 'end_day':
+            field_to_write = ' {:s}                             = {:02d}, {:2d}, {:02d},\n'.format(field, value.day,
+                                                                                                   value.day, value.day)
+        if field == 'end_hour':
+            field_to_write = ' {:s}                            = {:02d}, {:02d}, {:02d},\n'.format(field, value.hour,
+                                                                                                   value.hour, value.hour)
+        if field == 'interval_seconds':
+            field_to_write = ' {:s}                    = {:d}\n'.format(field, value)
+        try:
+            return field_to_write
+        except:
+            print('could not rewrite namelist.input file')
+
+    def _replacefield(self, file, searchExp, replaceExp):
+        import fileinput
+        for line in fileinput.FileInput(file, inplace=1):
             if searchExp in line:
                 line = line.replace(line, replaceExp)
             sys.stdout.write(line)
 
-
-    def _change_WPS_namelist_input_file(self):
-        namelist_wps_in = open(self.WRF_DIR + '/WPS/namelist.wps', 'r')
-        namelist_wps_out = open(self.WRF_DIR + '/WPS/temp_namelist.wps', 'w')
-        lines = namelist_wps_in.readlines()
+    def _change_WPS_namelist_input_file(self, start_date, end_date, interval_seconds):
         fields = ['start_date', 'end_date', 'interval_seconds']
-        for l in lines:
-            for f in fields:
-                if f in l:
-                    if f not fields[2]:
-                        l =
-        lines[3] = self._write_times_field(lines[3], self.start_date)
-        lines[4] = self._write_times_field(lines[4], self.end_date)
-        interval_seconds = lines[5].split('=')
-        lines[5] = interval_seconds[0] +' = '+self.hour_step*3600+','
-        for l in lines:
-            print(l[:-1], file=namelist_wps_out)
-        namelist_wps_out.close()
-        os.rename(namelist_wps_out.name, namelist_wps_in.name)
-
+        values = [start_date, end_date, interval_seconds]
+        for f, v in zip(fields, values):
+            self._replacefield(self.WRF_DIR + '/WPS/namelist.wps', f, self._write_new_text_for_line_wps(f, v))
 
     def _link_input_data_to_WPS(self):
         from pyWRF.read_config import datetime_to_filename_format
@@ -83,6 +103,9 @@ class RunAnalysis:
         from pyWRF.read_config import working_directory
         self._change_WPS_namelist_input_file()
         self._link_input_data_to_WPS()
+
+        if not os.path.exists(self.WORK_DIR + '/wps_out'):
+            os.makedirs(self.WORK_DIR + '/wps_out')
 
         with working_directory(self.WRF_DIR+'/WPS'):
             print('We moved to '+os.getcwd())
@@ -113,38 +136,21 @@ class RunAnalysis:
                 print('metgrid did not generate log file')
         print('We went back to '+os.getcwd())
 
+
     def _change_WRF_namelist_input_file(self):
 
-        namelist_wrf_in = open(self.WRF_DIR+'/WRFV3/test/em_real/namelist.input')
-        namelist_wrf_out = open(self.WRF_DIR+'/WRFV3/test/em_real/temp_namelist.input', 'w')
-
-        lines = namelist_wrf_in.readlines()
-
-        lines[2].split('=')[1] = str(self.run_hours)+','
-        lines[5].split('=')[1] = str(self.start_date.year)+',' + str(self.start_date.year)+',' \
-                                 + str(self.start_date.year)+','
-        lines[6].split('=')[1] = str(self.start_date.month)+',' + str(self.start_date.month)+',' \
-                                 + str(self.start_date.month)+','
-        lines[7].split('=')[1] = str(self.start_date.day) + ',' + str(self.start_date.day) + ',' \
-                                 + str(self.start_date.day) + ','
-        lines[8].split('=')[1] = str(self.start_date.hour) + ',' + str(self.start_date.hour) + ',' \
-                                 + str(self.start_date.hour) + ','
-        lines[11].split('=')[1] = str(self.end_date.year) + ',' + str(self.end_date.year) + ',' \
-                                 + str(self.end_date.year) + ','
-        lines[12].split('=')[1] = str(self.end_date.month) + ',' + str(self.end_date.month) + ',' \
-                                 + str(self.end_date.month) + ','
-        lines[13].split('=')[1] = str(self.end_date.day) + ',' + str(self.end_date.day) + ',' \
-                                 + str(self.end_date.day) + ','
-        lines[14].split('=')[1] = str(self.end_date.hour) + ',' + str(self.end_date.hour) + ',' \
-                                 + str(self.end_date.hour) + ','
-        lines[15].split('=')[1] = str(self.interval_seconds)+','
-
-        for l in lines:
-            print(l[:-1], file=namelist_wrf_out)
-        os.rename(namelist_wrf_out.name, namelist_wrf_in.name)
+        fields = ['start_year', 'start_month', 'start_day', 'start_hour', 'end_year', 'end_month', 'end_day',
+                  'end_hour', 'interval_seconds']
+        values = [self.start_date, self.start_date, self.start_date, self.start_date, self.end_date, self.end_date,
+                  self.end_date, self.end_date, self.interval_seconds]
+        for f, v in zip(fields,values):
+            self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.wps', f, self._write_new_text_for_line_wrf(f, v))
 
     def run_WRF(self):
         from pyWRF.read_config import working_directory
+        if not os.path.exists(self.WORK_DIR + '/wps_out'):
+            os.makedirs(self.WORK_DIR + '/wps_out')
+
         with working_directory(self.WRF_DIR+'/WRFV3/test/em_real'):
             print('Moving to ' + os.getcwd())
             os.system('ln -sf '+self.WRF_DIR+'/WPS/met_em* .')
@@ -168,7 +174,7 @@ class RunAnalysis:
             except:
                 print('something went wrong. Files not created or with zero size')
 
-            os.system('. $WRF_DIR/WRFV3/test/em_real/wrf.exe')
+            os.system('./wrf.exe')
             try:
                 if os.path.isfile(self.WRF_DIR+'/WRFV3/test/em_real/wrfout_d01_'+date_string_WRF) and os.stat(
                             self.WRF_DIR+'/WRFV3/test/em_real/wrfout_d01_'+date_string_WRF).st_size != 0:
@@ -183,3 +189,19 @@ class RunAnalysis:
                 print('something went wrong. Output WRF Files not created or with zero size')
         print('We went back to ' + os.getcwd())
 
+    def clean_directories(self):
+        with working_directory(self.WRF_DIR+'/WPS'):
+            print('Cleaning WPS folder from output files')
+            try:
+                os.system('mv FILE* '+self.WORK_DIR+'/wps_out')
+                os.system('mv geo_em.d* '+self.WORK_DIR+'/wps_out')
+                os.system('mv met_em.d* ' + self.WORK_DIR + '/wps_out')
+
+            except:
+                print('There was a problem. Files were not created')
+        with working_directory(self.WRF_DIR+'/WRFV3/test/em_real'):
+            print('Cleaning WRFV3/test/em_real folder from output files')
+            try:
+                os.system('mv wrfinput_* ' + self.WORK_DIR + '/wrf_out')
+                os.system('mv wrfout_* '+self.WORK_DIR+'/wrf_out')
+                os.system('mv wrfbdy_* ' + self.WORK_DIR + '/wrf_out')

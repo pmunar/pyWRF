@@ -12,7 +12,7 @@ class RunAnalysis:
         self.start_date = group_start_date   # datetime object format
         self.end_date = group_end_date       # datetime object format
         self.analysis_interval = self.end_date - self.start_date
-        self.input_data = path_do_input_data
+        self.input_data_dir = path_do_input_data
         self.ouput = path_to_output_data
         self.run_hours = self.analysis_interval.total_seconds() // 3600 + hour_step
         self.hour_step = hour_step
@@ -20,7 +20,7 @@ class RunAnalysis:
         self.server = server
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
-        self.WORK_DIR = self.ouput
+        self.WORK_DIR = self.input_data_dir
 
     def _write_new_text_for_line_wps(self, field, value):
         if type(value) == datetime.datetime:
@@ -87,8 +87,8 @@ class RunAnalysis:
         while date <= self.end_date:
             date_filename_format = datetime_to_filename_format(date)
             infile = 'fnl_%s.grib2'%(date_filename_format)
-            if not os.path.exists(self.WRF_DIR+'/DATA/'+infile):
-                os.system('ln -s '+self.WORK_DIR+'/'+infile+' '+self.WRF_DIR+'/DATA')
+            if not os.path.islink(self.WRF_DIR+'/DATA/'+infile):
+                os.system('ln -s '+self.input_data_dir+'/'+infile+' '+self.WRF_DIR+'/DATA')
             else:
                 continue
             date += datetime.timedelta(hours=self.hour_step)

@@ -6,7 +6,7 @@ def gunzip_and_rename_files(path):
     try:
         print('Decompressing all data files in this folder')
         print('Changing all file names. The original name is kept cut after grib2')
-        for i, filename in enumerate(glob.glob(path + '*.gz')):
+        for i, filename in enumerate(glob.glob(path + '/*.gz')):
             os.system('gunzip '+filename)
             filename = filename.split('.gz')[0]
             new_filename = filename.split('grib2')[0]+'grib2'

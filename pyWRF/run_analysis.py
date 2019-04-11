@@ -121,11 +121,11 @@ class RunAnalysis:
                 print('Geogrid did not generate log file')
 
             self._link_vtables()
-            os.system('./WPS/link_grib.csh '+self.WRF_DIR+'/DATA/fnl_')
+            os.system('./link_grib.csh '+self.WRF_DIR+'/DATA/fnl_')
             print('Running ungrib.exe')
-            os.system('./WPS/ungrib.exe >& ungrib_data.log')
+            os.system('./ungrib.exe >& ungrib_data.log')
             print('Running metgrid.exe')
-            os.system('./WPS/metgrid.exe >& log.metgrid')
+            os.system('./metgrid.exe >& log.metgrid')
 
             try:
                 log_metgrid = open('log.metgrid')
@@ -146,7 +146,7 @@ class RunAnalysis:
         values = [self.start_date, self.start_date, self.start_date, self.start_date, self.end_date, self.end_date,
                   self.end_date, self.end_date, self.interval_seconds]
         for f, v in zip(fields,values):
-            self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.wps', f, self._write_new_text_for_line_wrf(f, v))
+            self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.input', f, self._write_new_text_for_line_wrf(f, v))
 
     def run_WRF(self):
         if not os.path.exists(self.WORK_DIR + '/wps_out'):

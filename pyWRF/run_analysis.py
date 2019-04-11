@@ -16,7 +16,7 @@ class RunAnalysis:
         self.ouput = path_to_output_data
         self.run_hours = self.analysis_interval.total_seconds() // 3600 + hour_step
         self.hour_step = hour_step
-        self.interval_seconds = self.hour_step * 3600.
+        self.interval_seconds = int(self.hour_step * 3600.)
         self.server = server
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
@@ -33,7 +33,7 @@ class RunAnalysis:
             new_line = ' ' + field + " = '" + date_field + "',\n"
             return new_line
         elif type(value) == int or type(value) == float:
-            new_line = ' ' + field + " = " + str(value) + '\n'
+            new_line = ' ' + field + " = " + str(value) + ',\n'
             return new_line
 
     def _write_new_text_for_line_wrf(self, field, value):
@@ -62,7 +62,7 @@ class RunAnalysis:
             field_to_write = ' {:s}                            = {:02d}, {:02d}, {:02d},\n'.format(field, value.hour,
                                                                                                    value.hour, value.hour)
         if field == 'interval_seconds':
-            field_to_write = ' {:s}                    = {:d}\n'.format(field, value)
+            field_to_write = ' {:s}                    = {:d},\n'.format(field, value)
         try:
             return field_to_write
         except:
@@ -117,8 +117,10 @@ class RunAnalysis:
                     print('Geodrid ended successfully!')
                 else:
                     print('Geogrid ended without success. Check log file')
+                    sys.exit()
             except:
                 print('Geogrid did not generate log file')
+                sys.exit()
 
             self._link_vtables()
             os.system('./link_grib.csh '+self.WRF_DIR+'/DATA/fnl_')
@@ -134,8 +136,10 @@ class RunAnalysis:
                     print('metgrid ended successfully!')
                 else:
                     print('metgrid ended without success. Check log file')
+                    sys.exit()
             except:
                 print('metgrid did not generate log file')
+                sys.exit()
         print('We went back to '+os.getcwd())
 
 

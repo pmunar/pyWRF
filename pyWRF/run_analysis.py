@@ -75,9 +75,9 @@ class RunAnalysis:
                 line = line.replace(line, replaceExp)
             sys.stdout.write(line)
 
-    def _change_WPS_namelist_input_file(self, start_date, end_date, interval_seconds):
+    def _change_WPS_namelist_input_file(self):
         fields = ['start_date', 'end_date', 'interval_seconds']
-        values = [start_date, end_date, interval_seconds]
+        values = [self.start_date, self.end_date, self.interval_seconds]
         for f, v in zip(fields, values):
             self._replacefield(self.WRF_DIR + '/WPS/namelist.wps', f, self._write_new_text_for_line_wps(f, v))
 

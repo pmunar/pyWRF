@@ -103,11 +103,13 @@ class RunAnalysis:
         self._change_WPS_namelist_input_file()
         self._link_input_data_to_WPS()
 
+        print('Starting PREPROCESSING. This might take a while')
         if not os.path.exists(self.WORK_DIR + '/wps_out'):
             os.makedirs(self.WORK_DIR + '/wps_out')
 
         with working_directory(self.WRF_DIR+'/WPS'):
             print('We moved to '+os.getcwd())
+            print('Running geogrid.exe')
             os.system('./geogrid.exe >& log.geogrid')
             try:
                 log_geogrid = open('log.geogrid')
@@ -121,7 +123,9 @@ class RunAnalysis:
 
             self._link_vtables()
             os.system('./WPS/link_grib.csh '+self.WRF_DIR+'/DATA/fnl_')
+            print('Running ungrib.exe')
             os.system('./WPS/ungrib.exe >& ungrib_data.log')
+            print('Running metgrid.exe')
             os.system('./WPS/metgrid.exe >& log.metgrid')
 
             try:
@@ -149,11 +153,12 @@ class RunAnalysis:
         from pyWRF import working_directory
         if not os.path.exists(self.WORK_DIR + '/wps_out'):
             os.makedirs(self.WORK_DIR + '/wps_out')
-
+        print('Starting WRF analysis. This might take a while')
         with working_directory(self.WRF_DIR+'/WRFV3/test/em_real'):
             print('Moving to ' + os.getcwd())
             os.system('ln -sf '+self.WRF_DIR+'/WPS/met_em* .')
             self._change_WRF_namelist_input_file()
+            print('Running real.exe')
             os.system('./real.exe')
             date_string = str(self.start_date).split(' ')
             date_string_WRF = date_string[0]+'_'+date_string[1]
@@ -173,6 +178,7 @@ class RunAnalysis:
             except:
                 print('something went wrong. Files not created or with zero size')
 
+            print('Running wrf.exe')
             os.system('./wrf.exe')
             try:
                 if os.path.isfile(self.WRF_DIR+'/WRFV3/test/em_real/wrfout_d01_'+date_string_WRF) and os.stat(

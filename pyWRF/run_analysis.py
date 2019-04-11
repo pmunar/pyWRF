@@ -87,7 +87,10 @@ class RunAnalysis:
         while date <= self.end_date:
             date_filename_format = datetime_to_filename_format(date)
             infile = 'fnl_%s.grib2'%(date_filename_format)
-            os.system('ln -s '+infile+' $WRF_DIR/DATA')
+            if not os.path.exists(self.WRF_DIR+'/DATA/'+infile):
+                os.system('ln -s '+infile+' $WRF_DIR/DATA')
+            else:
+                continue
             date += datetime.timedelta(hours=self.hour_step)
 
     def _link_vtables(self):

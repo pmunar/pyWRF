@@ -24,6 +24,8 @@ def get_stop_date_for_processing_last_group(end_date):
 
 data_path, wps_out, wrf_out, grads_out, start_date, end_date, group = get_config_parameters(sys.argv[1])
 
+print(data_path, wps_out, wrf_out, grads_out, start_date, end_date, group)
+
 print('=========================================================')
 print('                     Summary')
 print('=========================================================')

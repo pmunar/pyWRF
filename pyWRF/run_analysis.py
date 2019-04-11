@@ -1,7 +1,7 @@
 import datetime
 import os
 import sys
-
+from pyWRF.utils import working_directory
 from pyWRF import environ
 
 
@@ -82,7 +82,7 @@ class RunAnalysis:
             self._replacefield(self.WRF_DIR + '/WPS/namelist.wps', f, self._write_new_text_for_line_wps(f, v))
 
     def _link_input_data_to_WPS(self):
-        from pyWRF import datetime_to_filename_format
+        from pyWRF.utils import datetime_to_filename_format
         date = self.start_date
         while date <= self.end_date:
             date_filename_format = datetime_to_filename_format(date)
@@ -99,7 +99,6 @@ class RunAnalysis:
         os.system('ln -sf '+cwd+'ungrib/Variable_Tables/'+vtable+' '+cwd+'/Vtabl')
 
     def run_wps(self):
-        from pyWRF import working_directory
         self._change_WPS_namelist_input_file()
         self._link_input_data_to_WPS()
 
@@ -150,7 +149,6 @@ class RunAnalysis:
             self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.wps', f, self._write_new_text_for_line_wrf(f, v))
 
     def run_WRF(self):
-        from pyWRF import working_directory
         if not os.path.exists(self.WORK_DIR + '/wps_out'):
             os.makedirs(self.WORK_DIR + '/wps_out')
         print('Starting WRF analysis. This might take a while')

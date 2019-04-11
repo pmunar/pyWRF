@@ -111,8 +111,8 @@ class RunAnalysis:
             print('Running geogrid.exe')
             os.system('./geogrid.exe >& log.geogrid')
             try:
-                log_geogrid = open('log.geogrid')
-                success_string = 'Successful completion of geogrid'
+                log_geogrid = open('./log.geogrid')
+                success_string = '!  Successful completion of geogrid.        !\n'
                 if success_string in log_geogrid.readlines():
                     print('Geodrid ended successfully!')
                 else:
@@ -120,7 +120,6 @@ class RunAnalysis:
                     sys.exit()
             except:
                 print('Geogrid did not generate log file')
-                sys.exit()
 
             self._link_vtables()
             os.system('./link_grib.csh '+self.WRF_DIR+'/DATA/fnl_')
@@ -130,8 +129,8 @@ class RunAnalysis:
             os.system('./metgrid.exe >& log.metgrid')
 
             try:
-                log_metgrid = open('log.metgrid')
-                success_string = 'Successful completion of metgrid'
+                log_metgrid = open('./log.metgrid')
+                success_string = '!  Successful completion of metgrid.        !\n'
                 if success_string in log_metgrid.readlines():
                     print('metgrid ended successfully!')
                 else:

@@ -1,9 +1,8 @@
-
-from pyWRF.read_config import *
 import datetime
 import os
-from pyWRF import environ
 import sys
+
+from pyWRF import environ
 
 
 class RunAnalysis:
@@ -21,7 +20,7 @@ class RunAnalysis:
         self.server = server
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
-        self.WORK_DIR = os.getcwd()
+        self.WORK_DIR = self.ouput
 
     def _write_new_text_for_line_wps(self, field, value):
         if type(value) == datetime.datetime:
@@ -83,7 +82,7 @@ class RunAnalysis:
             self._replacefield(self.WRF_DIR + '/WPS/namelist.wps', f, self._write_new_text_for_line_wps(f, v))
 
     def _link_input_data_to_WPS(self):
-        from pyWRF.read_config import datetime_to_filename_format
+        from pyWRF import datetime_to_filename_format
         date = self.start_date
         while date <= self.end_date:
             date_filename_format = datetime_to_filename_format(date)
@@ -100,7 +99,7 @@ class RunAnalysis:
         os.system('ln -sf '+cwd+'ungrib/Variable_Tables/'+vtable+' '+cwd+'/Vtabl')
 
     def run_wps(self):
-        from pyWRF.read_config import working_directory
+        from pyWRF import working_directory
         self._change_WPS_namelist_input_file()
         self._link_input_data_to_WPS()
 
@@ -147,7 +146,7 @@ class RunAnalysis:
             self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.wps', f, self._write_new_text_for_line_wrf(f, v))
 
     def run_WRF(self):
-        from pyWRF.read_config import working_directory
+        from pyWRF import working_directory
         if not os.path.exists(self.WORK_DIR + '/wps_out'):
             os.makedirs(self.WORK_DIR + '/wps_out')
 

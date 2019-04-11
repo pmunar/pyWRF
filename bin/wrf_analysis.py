@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 import sys
 from pyWRF.read_config import get_config_parameters, conf_date_to_datetime
 from pyWRF.read_and_unzip import gunzip_and_rename_files

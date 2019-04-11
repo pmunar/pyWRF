@@ -42,7 +42,7 @@ start_date_datetime = conf_date_to_datetime(start_date)
 end_date_datetime = conf_date_to_datetime(end_date)
 length_of_analysis = check_length_of_analysis(start_date_datetime, end_date_datetime)
 
-print('The total time of the analysis is {:d} days {:d} hours'.format(length_of_analysis[0], length_of_analysis[1]))
+print('The total time of the analysis is {} days {} hours'.format(length_of_analysis[0], length_of_analysis[1]))
 
 number_of_groups = divmod(length_of_analysis[0], group)
 

@@ -89,8 +89,6 @@ class RunAnalysis:
             infile = 'fnl_%s.grib2'%(date_filename_format)
             if not os.path.islink(self.WRF_DIR+'/DATA/'+infile):
                 os.system('ln -s '+self.input_data_dir+'/'+infile+' '+self.WRF_DIR+'/DATA')
-            else:
-                continue
             date += datetime.timedelta(hours=self.hour_step)
 
     def _link_vtables(self):

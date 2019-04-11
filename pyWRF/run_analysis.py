@@ -88,7 +88,7 @@ class RunAnalysis:
             date_filename_format = datetime_to_filename_format(date)
             infile = 'fnl_%s.grib2'%(date_filename_format)
             if not os.path.exists(self.WRF_DIR+'/DATA/'+infile):
-                os.system('ln -s '+infile+' $WRF_DIR/DATA')
+                os.system('ln -s '+self.WORK_DIR+'/'+infile+' '+self.WRF_DIR+'/DATA')
             else:
                 continue
             date += datetime.timedelta(hours=self.hour_step)

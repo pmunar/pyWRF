@@ -2,6 +2,7 @@
 import sys
 from pyWRF.read_config import get_config_parameters, conf_date_to_datetime
 from pyWRF.read_and_unzip import gunzip_and_rename_files
+from pyWRF.run_analysis import RunAnalysis
 import datetime
 
 def check_length_of_analysis(start_date, end_date):
@@ -31,9 +32,10 @@ def __main__():
     start_time = start_date_datetime
     for n in range(number_of_groups[0] + 1):
         stop_time = get_stop_date_for_processing(start_time, group)
-        if n == range(num_group[0] + 1)[-1]:
+        if n == range(number_of_groups[0] + 1)[-1]:
             stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
+        analysis = RunAnalysis(start_time, stop_time, )
 
-        print('Analyzing times between +'start_time, stop_time)
+        print('Analyzing times between +'start_time, stop_time, data_path, wps_out)
         start_time = stop_time + datetime.timedelta(hours=6)
 

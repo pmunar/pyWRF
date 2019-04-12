@@ -103,7 +103,9 @@ class RunAnalysis:
         self._change_WPS_namelist_input_file()
         self._link_input_data_to_WPS()
 
+        print('=========================================================')
         print('Starting PREPROCESSING. This might take a while')
+        print('=========================================================')
         if not os.path.exists(self.WORK_DIR + '/wps_out'):
             os.makedirs(self.WORK_DIR + '/wps_out')
 
@@ -153,9 +155,11 @@ class RunAnalysis:
             self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.input', f, self._write_new_text_for_line_wrf(f, v))
 
     def run_WRF(self):
-        if not os.path.exists(self.WORK_DIR + '/wps_out'):
-            os.makedirs(self.WORK_DIR + '/wps_out')
+        if not os.path.exists(self.WORK_DIR + '/wrf_out'):
+            os.makedirs(self.WORK_DIR + '/wrf_out')
+        print('=========================================================')
         print('Starting WRF analysis. This might take a while')
+        print('=========================================================')
         with working_directory(self.WRF_DIR+'/WRFV3/test/em_real'):
             print('Moving to ' + os.getcwd())
             os.system('ln -sf '+self.WRF_DIR+'/WPS/met_em* .')

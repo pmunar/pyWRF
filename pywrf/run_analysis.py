@@ -133,7 +133,7 @@ class RunAnalysis:
 
             try:
                 log_metgrid = open('./log.metgrid')
-                success_string = '!  Successful completion of metgrid.        !\n'
+                success_string = '!  Successful completion of metgrid.  !\n'
                 if success_string in log_metgrid.readlines():
                     print('metgrid ended successfully!')
                 else:

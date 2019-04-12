@@ -97,7 +97,7 @@ class RunAnalysis:
         elif self.server == 'ERA-Interim' or self.server == 'ECMWF':
             vtable = 'Vtable.ECMWF'
         cwd = os.getcwd()
-        os.system('ln -sf '+cwd+'ungrib/Variable_Tables/'+vtable+' '+cwd+'/Vtable')
+        os.system('ln -sf '+cwd+'ungrib/Variable_Tables/'+vtable+' '+cwd+'/Vtabl')
 
     def run_wps(self):
         self._change_WPS_namelist_input_file()

@@ -9,15 +9,35 @@ from pyWRF.read_and_unzip import gunzip_and_rename_files
 
 
 def check_length_of_analysis(start_date, end_date):
+    """
+    Function to check the length, in days and hours, of the analysis that will be performed
+    :param start_date: datetime object
+    :param end_date: datetime object
+    :return: delta.days, delta.seconds//3600.
+    """
     delta = end_date - start_date
     return delta.days, delta.seconds//3600.
 
 
 def get_stop_date_for_processing(start_date, group_of_days):
+    """
+    Function that returns the stop_date for the next group of days of the analysis. This is used when the analysis
+    interval is too long and we divide it into few days analysis group.
+    :param start_date: datetime object representing the start date of the group of analysis
+    :param group_of_days: integer representing the length of the group of days that will be analyzed at once
+    :return: datetime object representing the stop date of the group of days to be analyzed
+    """
     stop_time = start_date + datetime.timedelta(days=group_of_days - 1, hours=18)
     return stop_time
 
 def get_stop_date_for_processing_last_group(end_date):
+    """
+    Function that returns the stop_date for the next group of days of the analysis. This is used when the analysis
+    interval is too long and we divide it into few days analysis group. This function is called when we are at the
+    last group of days, and it returns the end_date parameter as the output
+    :param end_date:
+    :return:
+    """
     stop_time = end_date
     return stop_time
 

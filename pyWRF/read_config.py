@@ -1,4 +1,9 @@
 def get_config_parameters(config_file):
+    """
+    Function that parses the config file and retrieves the parameters needed for the analysis
+    :param config_file:
+    :return: data_path, output_path, start_date, end_date, group_of_days
+    """
     import configparser
     Config = configparser.ConfigParser()
     Config.read(config_file)

@@ -3,6 +3,12 @@ import os
 
 
 def gunzip_and_rename_files(path):
+    """
+    Function that performs the decompression of the input files, if they are still in gzip format. If they are already
+    decompressed, it does nothing
+    :param path: string
+    :return:
+    """
     try:
         print('Decompressing all data files in this folder')
         print('Changing all file names. The original name is kept cut after grib2')

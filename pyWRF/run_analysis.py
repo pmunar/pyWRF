@@ -6,6 +6,20 @@ from pyWRF import environ
 
 
 class RunAnalysis:
+    """
+    Analysis of global assimilation system data (GDAS, GFS, ECMWF, ...) with the WRF analysis software
+
+    Attributes:
+        group_start_date: datetime.datetime object representing the initial date of the analysis
+        group_end_date: datetime.datetime object representing the final date of the analysis
+        path_to_input_data: absolute path where the input data is located. The input data may be GDAS, GFS or ECMWF data
+        path_to_output_data: absolute path where the final output files may be stored
+        server: string representing the global data assimilation system of the input data. Default value: "GDAS".
+                Other possible values are: "GFS" or "ECMWF"
+        hour_step: integer representing the time difference, in hours, of the successive data input files and outputs.
+
+    """
+
     def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, server='GDAS',
                  hour_step=6):
 
@@ -23,6 +37,15 @@ class RunAnalysis:
         self.WORK_DIR = self.input_data_dir
 
     def _write_new_text_for_line_wps(self, field, value):
+        """
+        Returns a new line for the wps nameilst.wps file changing the 'field' parameter according to the 'value'
+        parameter
+
+        :param field: string representing the field of the file that will be changed
+        :param value: datetime.datetime object or integer or float
+        :return: new_line (String)
+        """
+
         if type(value) == datetime.datetime:
             year = value.year
             month = value.month
@@ -37,6 +60,14 @@ class RunAnalysis:
             return new_line
 
     def _write_new_text_for_line_wrf(self, field, value):
+        """
+        Returns a new line for the wps nameilst.wps file changing the 'field' parameter according to the 'value'
+        parameter
+
+        :param field: string representing the field of the file that will be changed
+        :param value: datetime.datetime object or integer or float
+        :return: field_to_write. String. New line corresponding to the field and its new value
+        """
         if field == 'start_year':
             field_to_write = ' {:s}                          = {:d}, {:d}, {:d},\n'.format(field, value.year,
                                                                                            value.year, value.year)
@@ -69,6 +100,14 @@ class RunAnalysis:
             print('could not rewrite namelist.input file')
 
     def _replacefield(self, file, searchExp, replaceExp):
+        """
+        Returns the original file with the searchExp value replaced by replaceExp
+
+        :param file: string representing the file where to search for the 'searchExp' value
+        :param searchExp: string that will be searched within the file
+        :param replaceExp: string that will replace the searchExp parameter in the file
+        :return:
+        """
         import fileinput
         for line in fileinput.FileInput(file, inplace=1):
             if searchExp in line:
@@ -76,12 +115,20 @@ class RunAnalysis:
             sys.stdout.write(line)
 
     def _change_WPS_namelist_input_file(self):
+        """
+        :return: Returns the namelist.wps file with the 'start_date', 'end_date' and 'interval_seconds' fields replaced by the
+        ones according to the start_date, end_date and interval_seconds that are input to the class
+        """
         fields = ['start_date', 'end_date', 'interval_seconds']
         values = [self.start_date, self.end_date, self.interval_seconds]
         for f, v in zip(fields, values):
             self._replacefield(self.WRF_DIR + '/WPS/namelist.wps', f, self._write_new_text_for_line_wps(f, v))
 
     def _link_input_data_to_WPS(self):
+        """
+        :return: Function to make a sym link of the output files of the WPS folder into the $WRF_DIR/DATA folder, that
+        will be input for the WRF processing
+        """
         from pyWRF.utils import datetime_to_filename_format
         date = self.start_date
         while date <= self.end_date:
@@ -92,6 +139,9 @@ class RunAnalysis:
             date += datetime.timedelta(hours=self.hour_step)
 
     def _link_vtables(self):
+        """
+        :return: Function to make a sym link of the Vtables corresponding to the input data files.
+        """
         if self.server == 'GDAS' or self.server == 'GFS':
             vtable = 'Vtable.GFS'
         elif self.server == 'ERA-Interim' or self.server == 'ECMWF':
@@ -100,6 +150,9 @@ class RunAnalysis:
         os.system('ln -sf '+cwd+'/ungrib/Variable_Tables/'+vtable+' '+cwd+'/Vtable')
 
     def run_wps(self):
+        """
+        Function that runs the PREPROCESSING algorithms geogrid.exe, ungrib.exe and metgrid.exe
+        """
         self._change_WPS_namelist_input_file()
         self._link_input_data_to_WPS()
 
@@ -146,6 +199,11 @@ class RunAnalysis:
 
 
     def _change_WRF_namelist_input_file(self):
+        """
+        :return: returns the namelis.input file for WRF processing changed according to the fields 'start_year',
+        'start_month', 'start_day', 'start_hour', 'end_year', 'end_month', 'end_day', 'end_hour', 'interval_seconds'
+        that are taken from the input parameters of the RunAnalysis Class.
+        """
 
         fields = ['start_year', 'start_month', 'start_day', 'start_hour', 'end_year', 'end_month', 'end_day',
                   'end_hour', 'interval_seconds']
@@ -155,6 +213,9 @@ class RunAnalysis:
             self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.input', f, self._write_new_text_for_line_wrf(f, v))
 
     def run_WRF(self):
+        """
+        Function that runs the PROCESSING of the WRF program, by running real.exe and wrf.exe programs.
+        """
         if not os.path.exists(self.output + '/wrf_out'):
             os.makedirs(self.output + '/wrf_out')
         print('=========================================================')
@@ -201,6 +262,10 @@ class RunAnalysis:
         print('We went back to ' + os.getcwd())
 
     def clean_directories(self):
+        """
+        Function that moves the output files created by run_wps and run_wrf functions into the output directory
+        specified by the user in the config file, in the output_path field.
+        """
         with working_directory(self.WRF_DIR+'/WPS'):
             print('Cleaning WPS folder from output files')
             try:

@@ -13,7 +13,7 @@ class RunAnalysis:
         self.end_date = group_end_date       # datetime object format
         self.analysis_interval = self.end_date - self.start_date
         self.input_data_dir = path_do_input_data
-        self.ouput = path_to_output_data
+        self.output = path_to_output_data
         self.run_hours = self.analysis_interval.total_seconds() // 3600 + hour_step
         self.hour_step = hour_step
         self.interval_seconds = int(self.hour_step * 3600.)
@@ -106,8 +106,8 @@ class RunAnalysis:
         print('=========================================================')
         print('Starting PREPROCESSING. This might take a while')
         print('=========================================================')
-        if not os.path.exists(self.WORK_DIR + '/wps_out'):
-            os.makedirs(self.WORK_DIR + '/wps_out')
+        if not os.path.exists(self.output + '/wps_out'):
+            os.makedirs(self.output + '/wps_out')
 
         with working_directory(self.WRF_DIR+'/WPS'):
             print('We moved to '+os.getcwd())
@@ -155,8 +155,8 @@ class RunAnalysis:
             self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.input', f, self._write_new_text_for_line_wrf(f, v))
 
     def run_WRF(self):
-        if not os.path.exists(self.WORK_DIR + '/wrf_out'):
-            os.makedirs(self.WORK_DIR + '/wrf_out')
+        if not os.path.exists(self.output + '/wrf_out'):
+            os.makedirs(self.output + '/wrf_out')
         print('=========================================================')
         print('Starting WRF analysis. This might take a while')
         print('=========================================================')
@@ -204,17 +204,17 @@ class RunAnalysis:
         with working_directory(self.WRF_DIR+'/WPS'):
             print('Cleaning WPS folder from output files')
             try:
-                os.system('mv FILE* '+self.WORK_DIR+'/wps_out')
-                os.system('mv geo_em.d* '+self.WORK_DIR+'/wps_out')
-                os.system('mv met_em.d* ' + self.WORK_DIR + '/wps_out')
+                os.system('mv FILE* '+self.output+'/wps_out')
+                os.system('mv geo_em.d* '+self.output+'/wps_out')
+                os.system('mv met_em.d* ' + self.output + '/wps_out')
 
             except:
                 print('There was a problem. Files were not created')
         with working_directory(self.WRF_DIR+'/WRFV3/test/em_real'):
             print('Cleaning WRFV3/test/em_real folder from output files')
             try:
-                os.system('mv wrfinput_* ' + self.WORK_DIR + '/wrf_out')
-                os.system('mv wrfout_* '+self.WORK_DIR+'/wrf_out')
-                os.system('mv wrfbdy_* ' + self.WORK_DIR + '/wrf_out')
+                os.system('mv wrfinput_* ' + self.output + '/wrf_out')
+                os.system('mv wrfout_* '+self.output+'/wrf_out')
+                os.system('mv wrfbdy_* ' + self.output + '/wrf_out')
             except:
                 print('There was a problem. Files were not created')

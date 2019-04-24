@@ -22,15 +22,15 @@ def get_stop_date_for_processing_last_group(end_date):
     return stop_time
 
 
-data_path, wps_out, wrf_out, grads_out, start_date, end_date, group = get_config_parameters(sys.argv[1])
+data_path, output_path, start_date, end_date, group = get_config_parameters(sys.argv[1])
 
 print('=========================================================')
 print('                     Summary')
 print('=========================================================')
 print('Path to the data:{}'.format(data_path))
-print('Path to the WPS output:{}'.format(wps_out))
-print('Path to the WRF output:{}'.format(wrf_out))
-print('Path to the GRADS output:{}'.format(grads_out))
+print('Path to the WPS output:{}/wps_out'.format(output_path))
+print('Path to the WRF output:{}/wrf_out'.format(output_path))
+print('Path to the GRADS output:{}/grads_out'.format(output_path))
 print('Starting date of analysis:{}'.format(start_date))
 print('Ending date of analysis:{}'.format(end_date))
 print('Days in each subgroup of analysis:{}'.format(group))
@@ -54,7 +54,7 @@ for n in range(number_of_groups[0] + 1):
         stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
     print('Group {}'.format(n +1))
     print('Analyzing times between {} and {}'.format(start_time, stop_time))
-    analysis = RunAnalysis(start_time, stop_time, data_path, wps_out)
+    analysis = RunAnalysis(start_time, stop_time, data_path, output_path)
     analysis.run_wps()
     analysis.run_WRF()
     analysis.clean_directories()

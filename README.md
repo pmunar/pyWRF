@@ -8,11 +8,11 @@ $WRF_DIR/WRFV3/test/em_real/namelist.input
 
 Python packages to be installed in the system:
 
-configparser\\
-os\\
-sys\\
-datetime\\
-contextlib\\
-glob\\
+configparser\n
+os\n
+sys\n
+datetime\n
+contextlib\n
+glob\n
 
 

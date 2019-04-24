@@ -1,0 +1,193 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Setup &#8212; pyWRF 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Welcome to pyWRF’s documentation!" href="index.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head>
+  <body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to pyWRF’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyWRF 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="setup">
+<span id="id1"></span><h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
+<p>The steps you need to do are:</p>
+<ul class="simple">
+<li>Install and compile WRF</li>
+<li>Install or check for installation of needed Python libraries</li>
+<li>Install pyWRF</li>
+</ul>
+<div class="section" id="install-and-compile-wrf">
+<h2>Install and compile WRF<a class="headerlink" href="#install-and-compile-wrf" title="Permalink to this headline">¶</a></h2>
+<p>The most difficult part is to have the WRF package properly installed and compiled.
+There is a <a class="reference external" href="http://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php">tutorial</a>
+to install and compile with certain level of warranty, but it does not always goes well.</p>
+<p>Once you have the WRF package compiled and running you can continue installing the pyWRF package.</p>
+</div>
+<div class="section" id="install-or-check-for-installation-of-needed-python-libraries">
+<h2>Install or check for installation of needed Python libraries<a class="headerlink" href="#install-or-check-for-installation-of-needed-python-libraries" title="Permalink to this headline">¶</a></h2>
+<p>The additional needed Python libraries that pyWRF needs to run properly are:</p>
+<ul class="simple">
+<li>os</li>
+<li>sys</li>
+<li>configparser</li>
+<li>glob</li>
+<li>datetime</li>
+<li>contextlib</li>
+</ul>
+<p>You can install them either by using <a class="reference external" href="https://pypi.org/project/pip/">pip</a> or <a class="reference external" href="https://docs.conda.io/en/latest/">conda</a>, depending on your Python installation. In order to install the missing library (sys, in the next example) you can install it by typing:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install sys
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>conda install sys
+</pre></div>
+</div>
+<p>Once you have all the needed Python libraries you can proceed to install pyWRF.</p>
+</div>
+<div class="section" id="install-pywrf">
+<h2>Install pyWRF<a class="headerlink" href="#install-pywrf" title="Permalink to this headline">¶</a></h2>
+<p>You can get the pyWRF package from the GitHub repository. In order to download it, just type:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/pmunar/pyWRF
+</pre></div>
+</div>
+<p>Once downloaded, put the pyWRF folder in the directory where you want to
+install it (if you downloaded it elsewhere):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; mv pyWRF /path/where/you/want/to/install/it
+</pre></div>
+</div>
+<p>With the package in place, cd to the pyWRF directory:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; <span class="nb">cd</span> pyWRF
+</pre></div>
+</div>
+<p>and install it with the pip command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; pip install .
+</pre></div>
+</div>
+<p>Note the “.” at the end of the order. It is important!</p>
+<p>Once installed (it takes a few seconds) it is almost ready to run.</p>
+<p>Before running, the init-pywrf.sh script must be executed. It sets some
+usefull and important environment variables. But before running this script
+there are two changes that need to be done in it:</p>
+<p>1- change the PYWRF_DIR value to the path where you installed pyWRF:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; <span class="nb">export</span> <span class="nv">PYWRF_DIR</span><span class="o">=</span>/example/path/pyWRF
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>2- change the WRF_DIR value to the path where you installed and compiled</dt>
+<dd>the WRF software:</dd>
+</dl>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; <span class="nb">export</span> <span class="nv">WRF_DIR</span><span class="o">=</span>/example/path/WRF
+</pre></div>
+</div>
+<p>Once it is done, the script can be executed:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; ./init-pywrf.sh
+</pre></div>
+</div>
+<p>This script must be executed every time that the pyWRF package wants to be
+used. An easy solution is to make an alias and put it into the .bashrc file.
+An example of the line that would go into the .bashrc file:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">alias</span> init-pywrf<span class="o">=</span><span class="s2">&quot;. /path/where/you/installed/it/pyWRF/init-pywrf.sh&quot;</span>
+</pre></div>
+</div>
+<p>After that, before using the software, type:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; init-pywrf
+</pre></div>
+</div>
+<p>from wherever directory and the package will be ready.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to pyWRF’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="next chapter">Tutorial</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to pyWRF’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyWRF 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Pere Munar-Adrover.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

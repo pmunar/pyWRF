@@ -1,0 +1,87 @@
+==========================================
+
+Installation guide for the pyWRF package.
+
+This package is intended to be used with
+the WRF analysis software and assumes that
+there is a successfully compiled version
+of this program installed in the system.
+
+==========================================
+
+Prior to the installation, be sure that the following Python packages
+are installed in the system:
+
+configparser
+os
+sys
+datetime
+contextlib
+glob
+
+If some of them are not installed, they can probably be installed via 
+pip or conda repositories, depending on the system's Python installation.
+
+In order to check if they are properly installed, one can try to import 
+them from the Python prompt by doing:
+
+	> import configparser
+	> import os
+	> import sys
+	> import datetime
+	> import contextlib
+	> import glob
+
+Once checked for the installation of these packages one can proceed with
+the pyWRF installation.
+
+In order to install the software, download the package from the GitHub 
+repository:
+
+	> git clone https://github.com/pmunar/pyWRF.git
+
+Once downloaded, put the pyWRF folder in the directory where you want to 
+install it (if you downloaded it elsewhere):
+
+	> mv pyWRF /path/where/you/want/to/install/it
+
+With the package in place, cd to the pyWRF directory:
+
+	> cd pyWRF
+
+and install it with the pip command:
+
+	> pip install .
+
+Note the "." at the end of the order. It is important!
+
+Once installed (it takes a few seconds) it is almost ready to run.
+
+Before running, the init-pywrf.sh script must be executed. It sets some
+usefull and important environment variables. But before running this script
+there are two changes that need to be done in it:
+
+1- change the PYWRF_DIR value to the path where you installed pyWRF:
+
+	> export PYWRF_DIR=/example/path/pyWRF
+
+2- change the WRF_DIR value to the path where you installed and compiled
+   the WRF software:
+
+	> export export WRF_DIR=/example/path/WRF
+
+Once it is done, the script can be executed:
+
+	> ./init-pywrf.sh
+
+This script must be executed every time that the pyWRF package wants to be
+used. An easy solution is to make an alias and put it into the .bashrc file.
+An example of the line that would go into the .bashrc file:
+
+	alias init-pywrf=". /path/where/you/installed/it/pyWRF/init-pywrf.sh"
+
+After that, before using the software, type:
+
+	> init-pywrf
+
+from wherever directory and the package will be ready.

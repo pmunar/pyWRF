@@ -16,6 +16,8 @@ def gunzip_and_rename_files(path, format):
             if filename.lower().endswith('.gz'):
                 os.system('gunzip '+filename)
                 new_filename = filename.split(format)[0]+ format
+            elif filename.lower().endswith('.grib') or filename.lower().endswith('.grib2'):
+                continue
             else:
                 new_filename = filename.split(format)[0] + format
             os.rename(filename, new_filename)

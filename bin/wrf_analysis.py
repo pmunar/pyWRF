@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import datetime
 import sys
+import argparse
 
 from pyWRF.run_analysis import RunAnalysis
 from pyWRF.read_config import get_config_parameters
@@ -41,8 +42,22 @@ def get_stop_date_for_processing_last_group(end_date):
     stop_time = end_date
     return stop_time
 
+# The next lines are the main section of this python script. Here we load the config file,
+# we parse it and we can introduce optional parameters for the analysis, in case we want just
+# to run a part of the analysis (being wps, wrf, grads or clean the optional parameters).
 
-data_path, output_path, start_date, end_date, group = get_config_parameters(sys.argv[1])
+# The program divides the total elapsed time of analysis we want to perform in smaller groups
+# of time, of the lenght specified in the configuration file.
+
+parser = argparse.ArgumentParser()
+parser.add_argument('config', help='the configuration file to run the analysis')
+parser.add_argument('--wps', help="if selected, this option makes the program to compute only the WPS outputs")
+parser.add_argument('--wrf', help="if selected, this option makes the program to compute only the WRF outputs")
+parser.add_argument('--grads', help="if selected, this option makes the program to compute only the GRADS outputs")
+parser.add_argument('--clean', help="if selected, this option makes the program only to clean the directories")
+args = parser.parse_args()
+
+data_path, output_path, start_date, end_date, group = get_config_parameters(args.config)
 
 print('=========================================================')
 print('                     Summary')
@@ -75,9 +90,31 @@ for n in range(number_of_groups[0] + 1):
     print('Group {}'.format(n +1))
     print('Analyzing times between {} and {}'.format(start_time, stop_time))
     analysis = RunAnalysis(start_time, stop_time, data_path, output_path)
-    analysis.run_wps()
-    analysis.run_WRF()
-    analysis.clean_directories()
 
-    start_time = stop_time + datetime.timedelta(hours=6)
+    if args.wps:
+        analysis.run_wps()
+        start_time = stop_time + datetime.timedelta(hours=6)
+        continue
+    elif args.wrf:
+        analysis.run_WRF()
+        start_time = stop_time + datetime.timedelta(hours=6)
+        continue
+#    elif args.grads:
+#        analysis.run_grads()
+#        start_time = stop_time + datetime.timedelta(hours=6)
+#        continue
+    elif args.clean:
+        analysis.clean_directories()
+        start_time = stop_time + datetime.timedelta(hours=6)
+        continue
+    elif args.wps and args.wrf:
+        analysis.run_wps()
+        analysis.run_WRF()
+        start_time = stop_time + datetime.timedelta(hours=6)
+        continue
+    else:
+        analysis.run_wps()
+        analysis.run_WRF()
+        analysis.clean_directories()
+        start_time = stop_time + datetime.timedelta(hours=6)
 

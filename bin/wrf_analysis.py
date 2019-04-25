@@ -51,13 +51,17 @@ def get_stop_date_for_processing_last_group(end_date):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('config', help='the configuration file to run the analysis')
-parser.add_argument('--wps', help="if selected, this option makes the program to compute only the WPS outputs")
-parser.add_argument('--wrf', help="if selected, this option makes the program to compute only the WRF outputs")
-parser.add_argument('--grads', help="if selected, this option makes the program to compute only the GRADS outputs")
-parser.add_argument('--clean', help="if selected, this option makes the program only to clean the directories")
+parser.add_argument('--wps', help="if selected, this option makes the program to compute only the WPS outputs",
+                    action='store_true')
+parser.add_argument('--wrf', help="if selected, this option makes the program to compute only the WRF outputs",
+                    action='store_true')
+parser.add_argument('--grads', help="if selected, this option makes the program to compute only the GRADS outputs",
+                    action='store_true')
+parser.add_argument('--clean', help="if selected, this option makes the program only to clean the directories",
+                    action='store_true')
 args = parser.parse_args()
 
-data_path, output_path, start_date, end_date, group = get_config_parameters(args.config)
+data_path, output_path, data_format, start_date, end_date, group = get_config_parameters(args.config)
 
 print('=========================================================')
 print('                     Summary')
@@ -73,7 +77,7 @@ print('=========================================================')
 print('=========================================================')
 
 print('Unzipping files...')
-gunzip_and_rename_files(data_path)
+gunzip_and_rename_files(data_path, data_format)
 start_date_datetime = conf_date_to_datetime(start_date)
 end_date_datetime = conf_date_to_datetime(end_date)
 length_of_analysis = check_length_of_analysis(start_date_datetime, end_date_datetime)

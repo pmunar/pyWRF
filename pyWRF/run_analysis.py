@@ -20,7 +20,7 @@ class RunAnalysis:
 
     """
 
-    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, server='GDAS',
+    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, data_format, server='GDAS',
                  hour_step=6):
 
         self.start_date = group_start_date   # datetime object format
@@ -32,6 +32,7 @@ class RunAnalysis:
         self.hour_step = hour_step
         self.interval_seconds = int(self.hour_step * 3600.)
         self.server = server
+        self.data_format = data_format
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
         self.WORK_DIR = self.input_data_dir
@@ -133,7 +134,7 @@ class RunAnalysis:
         date = self.start_date
         while date <= self.end_date:
             date_filename_format = datetime_to_filename_format(date)
-            infile = 'fnl_%s.grib2'%(date_filename_format)
+            infile = 'fnl_%s.%s'%(date_filename_format, self.data_format)
             if not os.path.islink(self.WRF_DIR+'/DATA/'+infile):
                 os.system('ln -s '+self.input_data_dir+'/'+infile+' '+self.WRF_DIR+'/DATA')
             date += datetime.timedelta(hours=self.hour_step)
@@ -283,3 +284,4 @@ class RunAnalysis:
                 os.system('mv wrfbdy_* ' + self.output + '/wrf_out')
             except:
                 print('There was a problem. Files were not created')
+

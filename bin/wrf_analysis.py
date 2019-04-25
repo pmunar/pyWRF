@@ -51,13 +51,13 @@ def get_stop_date_for_processing_last_group(end_date):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('config', help='the configuration file to run the analysis')
-parser.add_argument('--wps', help="if selected, this option makes the program to compute only the WPS outputs",
+parser.add_argument('-wps', help="if selected, this option makes the program to compute only the WPS outputs",
                     action='store_true')
-parser.add_argument('--wrf', help="if selected, this option makes the program to compute only the WRF outputs",
+parser.add_argument('-wrf', help="if selected, this option makes the program to compute only the WRF outputs",
                     action='store_true')
-parser.add_argument('--grads', help="if selected, this option makes the program to compute only the GRADS outputs",
+parser.add_argument('-grads', help="if selected, this option makes the program to compute only the GRADS outputs",
                     action='store_true')
-parser.add_argument('--clean', help="if selected, this option makes the program only to clean the directories",
+parser.add_argument('-clean', help="if selected, this option makes the program only to clean the directories",
                     action='store_true')
 args = parser.parse_args()
 

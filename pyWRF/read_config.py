@@ -13,5 +13,6 @@ def get_config_parameters(config_file):
     group_of_days = Config.get('Analysis', 'group_of_days')
     data_path = Config.get('Data', 'data_path')
     output_path = Config.get('Data', 'output_path')
+    data_format = Config.get('Data', 'data_format')
 
-    return data_path, output_path, start_date, end_date, int(group_of_days)
+    return data_path, output_path, data_format, start_date, end_date, int(group_of_days)

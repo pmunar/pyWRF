@@ -93,7 +93,7 @@ for n in range(number_of_groups[0] + 1):
         stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
     print('Group {}'.format(n +1))
     print('Analyzing times between {} and {}'.format(start_time, stop_time))
-    analysis = RunAnalysis(start_time, stop_time, data_path, output_path)
+    analysis = RunAnalysis(start_time, stop_time, data_path, output_path, data_format)
 
     if args.wps:
         analysis.run_wps()

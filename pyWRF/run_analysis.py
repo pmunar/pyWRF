@@ -20,7 +20,8 @@ class RunAnalysis:
 
     """
 
-    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, data_format, server='GDAS',
+    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, data_format,
+                 num_domains=3, server='GDAS',
                  hour_step=6):
 
         self.start_date = group_start_date   # datetime object format
@@ -33,6 +34,7 @@ class RunAnalysis:
         self.interval_seconds = int(self.hour_step * 3600.)
         self.server = server
         self.data_format = data_format
+        self.num_domains = num_domains
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
         self.WORK_DIR = self.input_data_dir
@@ -262,6 +264,62 @@ class RunAnalysis:
                 print('something went wrong. Output WRF Files not created or with zero size')
         print('We went back to ' + os.getcwd())
 
+    def _write_new_text_for_line_arwpost(self, field, value, domain):
+        """
+        Returns a new line for the wps nameilst.ARWpost file changing the 'field' parameter according to the 'value'
+        parameter
+
+        :param field: string representing the field of the file that will be changed
+        :param value: datetime.datetime object or integer or float
+        :return: new_line (String)
+        """
+
+        if type(value) == datetime.datetime:
+            year = value.year
+            month = value.month
+            day = value.day
+            hour = value.hour
+            date_to_write = '{:d}-{:02d}-{:02d}_{:02d}:00:00'.format(year, month, day, hour)
+            date_field = date_to_write + "','" + date_to_write + "','" + date_to_write
+            if field == 'start_date' or field == 'end_date':
+                new_line = ' ' + field + " = '" + date_field + "',\n"
+            elif field == 'input_root_name' or field == 'output_root_name':
+                new_line = ' ' + field + " = './wrfout_d0"+domain+"_" + date_field + "',\n"
+            return new_line
+        elif type(value) == int or type(value) == float:
+            new_line = ' ' + field + " = " + str(value) + ',\n'
+            return new_line
+
+    def _change_ARWpost_namelist_input_file(self, ndom):
+        """
+        :return: Returns the namelist.ARWpost file with the 'start_date', 'end_date', 'interval_seconds' and name roots
+        fields replaced by the ones according to the start_date, end_date and interval_seconds that are input to the
+        class
+        """
+        fields = ['start_date', 'end_date', 'interval_seconds', 'input_root_name', 'output_root_name']
+        values = [self.start_date, self.end_date, self.interval_seconds, self.start_date, self.end_date]
+        for f, v in zip(fields, values):
+            self._replacefield(self.WRF_DIR + '/ARWpost/namelist.ARWpost', f,
+                               self._write_new_text_for_line_arwpost(f, v, ndom))
+
+    def run_ARWpost(self):
+        """
+        Function that runs the POSTPROCESSING of the WRF program, by running GRADS program.
+        """
+
+        if not os.path.exists(self.output + '/arwpost_out'):
+            os.makedirs(self.output + '/arwpost_out')
+        print('=========================================================')
+        print('Starting ARWpost analysis. This might take a while')
+        print('=========================================================')
+        with working_directory(self.WRF_DIR + '/ARWpost'):
+            print('Moving to ' + os.getcwd())
+            os.system('ln -sf ' + self.WRF_DIR + '/WRFV3/test/em_real/wrfout_* '+os.getcwd())
+            for ndom in range(1, self.num_domains +1):
+                self._change_ARWpost_namelist_input_file(ndom)
+                print('Running ARWpost.exe for domain 0%s'%(ndom))
+                os.system('./ARWpost.exe')
+
     def clean_directories(self):
         """
         Function that moves the output files created by run_wps and run_wrf functions into the output directory
@@ -284,4 +342,13 @@ class RunAnalysis:
                 os.system('mv wrfbdy_* ' + self.output + '/wrf_out')
             except:
                 print('There was a problem. Files were not created')
+
+        with working_directory(self.WRF_DIR + '/ARWpost'):
+            print('Cleaning ARWpost folder from output files')
+            try:
+                os.system('mv wrfout_*dat ' + self.output + '/arwpost_out')
+                os.system('mv wrfout_*ctl ' + self.output + '/arwpost_out')
+            except:
+                print('There was a problem. Files were not created')
+
 

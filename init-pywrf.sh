@@ -10,8 +10,6 @@
 # conveniently set up your shell for pyWRF by executing the aliases:
 # $ init_pyWRF
 
-export PYWRF_DIR=/home/pmunar/bin/pyWRF
-export WRF_DIR=/media/san2/astro/WRF
 export WRF_WPS_DIR=$WRF_DIR/WPS
 export WRF_WRFV3_DIR=$WRF_DIR/WRFV3
 export WRF_ARWpost_DIR=$WRF_DIR/ARWpost

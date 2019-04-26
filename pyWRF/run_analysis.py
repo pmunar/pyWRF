@@ -143,7 +143,6 @@ class RunAnalysis:
         """
         :return: Function to make a sym link of the Vtables corresponding to the input data files.
         """
-        print('THE INPUT DATA SERVER IS: {}'.format(self.server))
         if self.server == 'GDAS' or self.server == 'GFS':
             vtable = 'Vtable.GFS'
         elif self.server == 'ERA-Interim' or self.server == 'ECMWF':

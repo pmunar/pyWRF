@@ -6,6 +6,7 @@ Setup
 The steps you need to do are:
 
 * Install and compile WRF
+* Install or check for a Python installation in your system
 * Install or check for installation of needed Python libraries
 * Install pyWRF
 
@@ -14,9 +15,17 @@ Install and compile WRF
 
 The most difficult part is to have the WRF package properly installed and compiled.
 There is a `tutorial <http://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php>`__
-to install and compile with certain level of warranty, but it does not always goes well.
+to install and compile with certain level of warranty, but it does not always go well.
 
 Once you have the WRF package compiled and running you can continue installing the pyWRF package.
+
+
+Install or check for a Python installation in your system
+---------------------------------------------------------
+
+If you are using Linux, it is probable that you already have a Python installation ready in your system. However, I recommend you to make a parallel installation using `Anaconda <https://www.anaconda.com/>`__ distribution. This is an open-source Python distribution which allows the user to easily install packages in a clean and transparent way.
+
+I will assume you have this distribution installed from now on. For other ways to install Python and associated packages, there is a lot of information around in the net.
 
 Install or check for installation of needed Python libraries
 ------------------------------------------------------------
@@ -29,6 +38,7 @@ The additional needed Python libraries that pyWRF needs to run properly are:
 * glob
 * datetime
 * contextlib
+* argparse
 
 You can install them either by using `pip <https://pypi.org/project/pip/>`__ or `conda <https://docs.conda.io/en/latest/>`__, depending on your Python installation. In order to install the missing library (sys, in the next example) you can install it by typing:
 
@@ -51,7 +61,7 @@ You can get the pyWRF package from the GitHub repository. In order to download i
 
 .. code-block:: bash
 
-    git clone https://github.com/pmunar/pyWRF
+    > git clone https://github.com/pmunar/pyWRF
 
 Once downloaded, put the pyWRF folder in the directory where you want to 
 install it (if you downloaded it elsewhere):
@@ -78,20 +88,21 @@ Once installed (it takes a few seconds) it is almost ready to run.
 
 Before running, the init-pywrf.sh script must be executed. It sets some
 usefull and important environment variables. But before running this script
-there are two changes that need to be done in it:
+there are two environment variables that need to be set:
 
-1- change the PYWRF_DIR value to the path where you installed pyWRF:
+1- export the PYWRF_DIR variable. You can do it from the terminal:
 
 .. code-block:: bash
 
     > export PYWRF_DIR=/example/path/pyWRF
 
-2- change the WRF_DIR value to the path where you installed and compiled
-   the WRF software:
+2- export the WRF_DIR. You can do it from the terminal:
 
 .. code-block:: bash
 
     > export WRF_DIR=/example/path/WRF
+
+For making the process more confortable for you, we recommend you to put these two exports within your .bashrc file.
 
 Once it is done, the script can be executed:
 

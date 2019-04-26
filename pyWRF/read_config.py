@@ -14,5 +14,9 @@ def get_config_parameters(config_file):
     data_path = Config.get('Data', 'data_path')
     output_path = Config.get('Data', 'output_path')
     data_format = Config.get('Data', 'data_format')
+    num_domains = Config.get('Analysis', 'num_domains')
+    hours_step = Config.get('Analysis', 'hours_step')
+    input_data_server = Config.get('Analysis', 'input_data_server')
 
-    return data_path, output_path, data_format, start_date, end_date, int(group_of_days)
+    return data_path, output_path, data_format, start_date, end_date, int(num_domains), int(group_of_days), \
+           int(hours_step), input_data_server

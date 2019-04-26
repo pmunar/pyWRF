@@ -21,8 +21,7 @@ class RunAnalysis:
     """
 
     def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, data_format,
-                 num_domains=3, server='GDAS',
-                 hour_step=6):
+                 num_domains, hour_step=6, server='GDAS'):
 
         self.start_date = group_start_date   # datetime object format
         self.end_date = group_end_date       # datetime object format

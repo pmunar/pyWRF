@@ -20,8 +20,7 @@ class RunAnalysis:
 
     """
 
-    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, data_format,
-                 num_domains, hour_step, server):
+    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, data_format, num_domains, hour_step, server):
 
         self.start_date = group_start_date   # datetime object format
         self.end_date = group_end_date       # datetime object format
@@ -144,6 +143,7 @@ class RunAnalysis:
         """
         :return: Function to make a sym link of the Vtables corresponding to the input data files.
         """
+        print('THE INPUT DATA SERVER IS: {}'.format(self.server))
         if self.server == 'GDAS' or self.server == 'GFS':
             vtable = 'Vtable.GFS'
         elif self.server == 'ERA-Interim' or self.server == 'ECMWF':

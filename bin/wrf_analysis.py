@@ -68,6 +68,7 @@ print('=========================================================')
 print('                     Summary')
 print('=========================================================')
 print('Path to the data:{}'.format(data_path))
+print('Input data server:{}'.format(input_data_server))
 print('Path to the WPS output:{}/wps_out'.format(output_path))
 print('Path to the WRF output:{}/wrf_out'.format(output_path))
 print('Path to the GRADS output:{}/grads_out'.format(output_path))
@@ -94,8 +95,7 @@ for n in range(number_of_groups[0] + 1):
         stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
     print('Group {}'.format(n +1))
     print('Analyzing times between {} and {}'.format(start_time, stop_time))
-    analysis = RunAnalysis(start_time, stop_time, data_path, output_path, data_format, ndomains, hours_step,
-                           input_data_server)
+    analysis = RunAnalysis(start_time, stop_time, data_path, output_path, data_format, ndomains, hours_step, input_data_server)
 
     if args.wps:
         analysis.run_wps()

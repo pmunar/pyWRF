@@ -20,7 +20,8 @@ class RunAnalysis:
 
     """
 
-    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, data_format, num_domains, hour_step, server):
+    def __init__(self,group_start_date, group_end_date, path_do_input_data, path_to_output_data, data_format,
+                 num_domains, hour_step, server, parallel, ncores):
 
         self.start_date = group_start_date   # datetime object format
         self.end_date = group_end_date       # datetime object format
@@ -33,6 +34,8 @@ class RunAnalysis:
         self.server = server
         self.data_format = data_format
         self.num_domains = num_domains
+        self.parallel = parallel
+        self.ncores = ncores
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
         self.WORK_DIR = self.input_data_dir
@@ -227,7 +230,10 @@ class RunAnalysis:
             os.system('ln -sf '+self.WRF_DIR+'/WPS/met_em* .')
             self._change_WRF_namelist_input_file()
             print('Running real.exe')
-            os.system('./real.exe')
+            if self.parallel:
+                os.system('mpirun -np {} ./real.exe'.format(str(self.ncores)))
+            else:
+                os.system('./real.exe')
             date_string = str(self.start_date).split(' ')
             date_string_WRF = date_string[0]+'_'+date_string[1]
             try:
@@ -247,7 +253,10 @@ class RunAnalysis:
                 print('something went wrong. Files not created or with zero size')
 
             print('Running wrf.exe')
-            os.system('./wrf.exe')
+            if self.parallel:
+                os.system('mpirun -np {} ./wrf.exe'.format(str(self.ncores)))
+            else:
+                os.system('./wrf.exe')
             try:
                 if os.path.isfile(self.WRF_DIR+'/WRFV3/test/em_real/wrfout_d01_'+date_string_WRF) and os.stat(
                             self.WRF_DIR+'/WRFV3/test/em_real/wrfout_d01_'+date_string_WRF).st_size != 0:

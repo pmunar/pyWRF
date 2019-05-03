@@ -61,8 +61,8 @@ parser.add_argument('-clean', help="if selected, this option makes the program o
                     action='store_true')
 args = parser.parse_args()
 
-data_path, output_path, data_format, start_date, end_date, ndomains, group, hours_step, input_data_server = \
-    get_config_parameters(args.config)
+data_path, output_path, data_format, start_date, end_date, ndomains, group, hours_step, input_data_server, \
+parallel, ncores = get_config_parameters(args.config)
 
 print('=========================================================')
 print('                     Summary')
@@ -95,7 +95,8 @@ for n in range(number_of_groups[0] + 1):
         stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
     print('Group {}'.format(n +1))
     print('Analyzing times between {} and {}'.format(start_time, stop_time))
-    analysis = RunAnalysis(start_time, stop_time, data_path, output_path, data_format, ndomains, hours_step, input_data_server)
+    analysis = RunAnalysis(start_time, stop_time, data_path, output_path, data_format,
+                           ndomains, hours_step, input_data_server, parallel, ncores)
 
     if args.wps:
         analysis.run_wps()

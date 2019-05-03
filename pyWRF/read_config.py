@@ -17,6 +17,8 @@ def get_config_parameters(config_file):
     end_date = Config.get('Analysis', 'end_date')[1:-1]
     group_of_days = Config.get('Analysis', 'group_of_days')
     num_domains = Config.get('Analysis', 'num_domains')
+    parallel = Config.get('Analysis', 'parallel')
+    ncores = Config.get('Analysis', 'ncores')
 
     return data_path, output_path, data_format, start_date, end_date, int(num_domains), int(group_of_days), \
-           int(hours_step), input_data_server
+               int(hours_step), input_data_server, parallel, ncores

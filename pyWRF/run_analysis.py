@@ -34,7 +34,7 @@ class RunAnalysis:
         self.server = server
         self.data_format = data_format
         self.num_domains = num_domains
-        self.parallel = parallel
+        self.parallel = bool(parallel)
         self.ncores = ncores
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')

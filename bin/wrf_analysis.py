@@ -64,6 +64,11 @@ args = parser.parse_args()
 data_path, output_path, data_format, start_date, end_date, ndomains, group, hours_step, input_data_server, \
 parallel, ncores = get_config_parameters(args.config)
 
+if parallel == 'True' or parallel == 'y' or parallel == 'yes':
+    parallel = True
+else:
+    parallel = False
+
 print('=========================================================')
 print('                     Summary')
 print('=========================================================')
@@ -75,6 +80,7 @@ print('Path to the GRADS output:{}/grads_out'.format(output_path))
 print('Starting date of analysis:{}'.format(start_date))
 print('Ending date of analysis:{}'.format(end_date))
 print('Days in each subgroup of analysis:{}'.format(group))
+print('Parallel analysis: {}'.format(parallel))
 print('=========================================================')
 print('=========================================================')
 

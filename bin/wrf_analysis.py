@@ -62,7 +62,7 @@ parser.add_argument('-clean', help="if selected, this option makes the program o
 args = parser.parse_args()
 
 data_path, output_path, data_format, start_date, end_date, ndomains, group, hours_step, input_data_server, \
-parallel, ncores = get_config_parameters(args.config)
+bool(parallel), ncores = get_config_parameters(args.config)
 
 print('=========================================================')
 print('                     Summary')

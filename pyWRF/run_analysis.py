@@ -91,7 +91,7 @@ class RunAnalysis:
             field_to_write = ' {:s}                           = {:02d}, {:02d}, {:02d},\n'.format(field, value.month,
                                                                                                   value.month, value.month)
         if field == 'end_day':
-            field_to_write = ' {:s}                             = {:02d}, {:2d}, {:02d},\n'.format(field, value.day,
+            field_to_write = ' {:s}                             = {:02d}, {:02d}, {:02d},\n'.format(field, value.day,
                                                                                                    value.day, value.day)
         if field == 'end_hour':
             field_to_write = ' {:s}                            = {:02d}, {:02d}, {:02d},\n'.format(field, value.hour,

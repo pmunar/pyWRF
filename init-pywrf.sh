@@ -16,3 +16,11 @@ export WRF_ARWpost_DIR=$WRF_DIR/ARWpost
 
 export PATH=$PATH:$PYWRF_DIR:$PYWRF_DIR/bin:$PYWRF_DIR/pyWRF
 export PYTHONPATH=$PYWRF_DIR:$PYWRF_DIR/bin:$PYWRF_DIR/pyWRF:$PYTHONPATH
+
+if [ -d "/usr/lib64/openmpi/" ]
+then
+    export PATH=$PATH:/usr/lib64/openmpi/bin/
+else
+    echo "openmpi not present in current system"
+    echo "in order to use parallel processing of WRF, please install it"
+fi

@@ -128,6 +128,7 @@ for n in range(number_of_groups[0] + 1):
     else:
         analysis.run_wps()
         analysis.run_WRF()
+        analysis.run_ARWpost()
         analysis.clean_directories()
         start_time = stop_time + datetime.timedelta(hours=6)
 

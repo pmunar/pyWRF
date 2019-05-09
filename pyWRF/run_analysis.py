@@ -306,6 +306,7 @@ class RunAnalysis:
         fields = ['start_date', 'end_date', 'interval_seconds', 'input_root_name', 'output_root_name']
         values = [self.start_date, self.end_date, self.interval_seconds, self.start_date, self.end_date]
         for f, v in zip(fields, values):
+            print(f, v, self._write_new_text_for_line_arwpost(f, v, ndom))
             self._replacefield(self.WRF_DIR + '/ARWpost/namelist.ARWpost', f,
                                self._write_new_text_for_line_arwpost(f, v, ndom))
 

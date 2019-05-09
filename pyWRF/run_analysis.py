@@ -291,7 +291,7 @@ class RunAnalysis:
             if field == 'start_date' or field == 'end_date':
                 new_line = ' ' + field + " = '" + date_field + "',\n"
             elif field == 'input_root_name' or field == 'output_root_name':
-                new_line = ' ' + field + " = './wrfout_d0"+str(domain)+"_" + date_field + "',\n"
+                new_line = ' ' + field + " = './wrfout_d0"+str(domain)+"_" + date_field + "'\n"
             return new_line
         elif type(value) == int or type(value) == float:
             new_line = ' ' + field + " = " + str(value) + ',\n'

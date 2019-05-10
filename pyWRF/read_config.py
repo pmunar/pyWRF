@@ -9,7 +9,7 @@ def get_config_parameters(config_file):
     Config.read(config_file)
     config_params = []
     for s in Config.sections():
-    config_params.append(dict(Config.items(s)))
+        config_params.append(dict(Config.items(s)))
     return config_params
 
 

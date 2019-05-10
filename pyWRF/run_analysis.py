@@ -320,7 +320,7 @@ class RunAnalysis:
         print('=========================================================')
         with working_directory(self.WRF_DIR + '/ARWpost'):
             print('Moving to ' + os.getcwd())
-            os.system('ln -sf ' + self.WRF_DIR + '/WRFV3/test/em_real/wrfout_* '+os.getcwd())
+            os.system('cp ' + self.WRF_DIR + '/WRFV3/test/em_real/wrfout_* '+os.getcwd())
             for ndom in range(1, self.num_domains +1):
                 self._change_ARWpost_namelist_input_file(ndom)
                 print('Running ARWpost.exe for domain 0%s'%(ndom))
@@ -352,6 +352,7 @@ class RunAnalysis:
         with working_directory(self.WRF_DIR + '/ARWpost'):
             print('Cleaning ARWpost folder from output files')
             try:
+                os.system('rm wrfout_d*:00')
                 os.system('mv wrfout_*dat ' + self.output + '/arwpost_out')
                 os.system('mv wrfout_*ctl ' + self.output + '/arwpost_out')
             except:

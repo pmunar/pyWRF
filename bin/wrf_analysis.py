@@ -105,11 +105,16 @@ for n in range(number_of_groups[0] + 1):
                            config[0]['data_format'], int(config[1]['num_domains']), int(config[0]['hours_step']),
                            config[0]['input_data_server'], config[1]['parallel'], int(config[1]['ncores']))
 
-    if args.wps:
+    elif args.wps and args.wrf:
+        analysis.run_wps()
+        analysis.run_WRF()
+        start_time = stop_time + datetime.timedelta(hours=6)
+        continue
+    if args.wps and not args.wrf:
         analysis.run_wps()
         start_time = stop_time + datetime.timedelta(hours=6)
         continue
-    elif args.wrf:
+    elif args.wrf and not args.wps:
         analysis.run_WRF()
         start_time = stop_time + datetime.timedelta(hours=6)
         continue
@@ -119,11 +124,6 @@ for n in range(number_of_groups[0] + 1):
         continue
     elif args.clean:
         analysis.clean_directories()
-        start_time = stop_time + datetime.timedelta(hours=6)
-        continue
-    elif args.wps and args.wrf:
-        analysis.run_wps()
-        analysis.run_WRF()
         start_time = stop_time + datetime.timedelta(hours=6)
         continue
     else:

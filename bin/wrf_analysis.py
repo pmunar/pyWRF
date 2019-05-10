@@ -105,12 +105,12 @@ for n in range(number_of_groups[0] + 1):
                            config[0]['data_format'], int(config[1]['num_domains']), int(config[0]['hours_step']),
                            config[0]['input_data_server'], config[1]['parallel'], int(config[1]['ncores']))
 
-    elif args.wps and args.wrf:
+    if args.wps and args.wrf:
         analysis.run_wps()
         analysis.run_WRF()
         start_time = stop_time + datetime.timedelta(hours=6)
         continue
-    if args.wps and not args.wrf:
+    elif args.wps and not args.wrf:
         analysis.run_wps()
         start_time = stop_time + datetime.timedelta(hours=6)
         continue

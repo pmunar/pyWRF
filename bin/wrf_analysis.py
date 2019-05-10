@@ -61,13 +61,13 @@ parser.add_argument('-clean', help="if selected, this option makes the program o
                     action='store_true')
 args = parser.parse_args()
 
-config_params = get_config_parameters(args.config)
+config = get_config_parameters(args.config)
 
-if config_params[1]['parallel'] == 'True' or config_params[1]['parallel'] == 'y' or \
-                config_params[1]['parallel'] == 'yes':
-    config_params[1]['parallel'] = True
+if config[1]['parallel'] == 'True' or config[1]['parallel'] == 'y' or \
+                config[1]['parallel'] == 'yes':
+    config[1]['parallel'] = True
 else:
-    config_params[1]['parallel'] = False
+    config[1]['parallel'] = False
 
 print('=========================================================')
 print('                     Summary')

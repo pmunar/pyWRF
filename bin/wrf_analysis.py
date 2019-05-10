@@ -92,11 +92,11 @@ length_of_analysis = check_length_of_analysis(start_date_datetime, end_date_date
 
 print('The total time of the analysis is {} days {} hours'.format(length_of_analysis[0], length_of_analysis[1]))
 
-number_of_groups = divmod(length_of_analysis[0], config[1]['group_of_days'])
+number_of_groups = divmod(length_of_analysis[0], int(config[1]['group_of_days']))
 
 start_time = start_date_datetime
 for n in range(number_of_groups[0] + 1):
-    stop_time = get_stop_date_for_processing(start_time, config[1]['group_of_days'])
+    stop_time = get_stop_date_for_processing(start_time, int(config[1]['group_of_days']))
     if n == range(number_of_groups[0] + 1)[-1]:
         stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
     print('Group {}'.format(n +1))

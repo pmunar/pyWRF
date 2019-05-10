@@ -86,8 +86,8 @@ print('=========================================================')
 
 print('Unzipping files...')
 gunzip_and_rename_files(config[0]['data_path'], config[0]['data_format'])
-start_date_datetime = conf_date_to_datetime(config[0]['start_date'])
-end_date_datetime = conf_date_to_datetime(config[0]['end_date'])
+start_date_datetime = conf_date_to_datetime(config[1]['start_date'])
+end_date_datetime = conf_date_to_datetime(config[1]['end_date'])
 length_of_analysis = check_length_of_analysis(start_date_datetime, end_date_datetime)
 
 print('The total time of the analysis is {} days {} hours'.format(length_of_analysis[0], length_of_analysis[1]))
@@ -102,8 +102,8 @@ for n in range(number_of_groups[0] + 1):
     print('Group {}'.format(n +1))
     print('Analyzing times between {} and {}'.format(start_time, stop_time))
     analysis = RunAnalysis(start_time, stop_time, config[0]['data_path'], config[0]['output_path'],
-                           config[0]['data_format'], int(config[1]['num_domains']), int(config[1]['hours_step']),
-                           config[1]['input_data_server'], config[1]['parallel'], int(config[1]['ncores']))
+                           config[0]['data_format'], int(config[1]['num_domains']), int(config[0]['hours_step']),
+                           config[0]['input_data_server'], config[1]['parallel'], int(config[1]['ncores']))
 
     if args.wps:
         analysis.run_wps()

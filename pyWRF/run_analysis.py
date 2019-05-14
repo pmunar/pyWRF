@@ -294,11 +294,10 @@ class RunAnalysis:
             day = value.day
             hour = value.hour
             date_to_write = '{:d}-{:02d}-{:02d}_{:02d}:00:00'.format(year, month, day, hour)
-            date_field = date_to_write + "','" + date_to_write + "','" + date_to_write
             if field == 'start_date' or field == 'end_date':
-                new_line = ' ' + field + " = '" + date_field + "',\n"
+                new_line = ' ' + field + " = '" + date_to_write + "',\n"
             elif field == 'input_root_name' or field == 'output_root_name':
-                new_line = ' ' + field + " = './wrfout_d0"+str(domain)+"_" + date_field + "',\n"
+                new_line = ' ' + field + " = './wrfout_d0"+str(domain)+"_" + date_to_write + "'\n"
             return new_line
         elif type(value) == int or type(value) == float:
             new_line = ' ' + field + " = " + str(value) + ',\n'
@@ -328,7 +327,7 @@ class RunAnalysis:
         print('=========================================================')
         with working_directory(self.WRF_DIR + '/ARWpost'):
             print('Moving to ' + os.getcwd())
-            os.system('ln -sf ' + self.WRF_DIR + '/WRFV3/test/em_real/wrfout_* '+os.getcwd())
+            os.system('cp ' + self.WRF_DIR + '/WRFV3/test/em_real/wrfout_* '+os.getcwd())
             for ndom in range(1, self.num_domains +1):
                 self._change_ARWpost_namelist_input_file(ndom)
                 print('Running ARWpost.exe for domain 0%s'%(ndom))
@@ -360,6 +359,7 @@ class RunAnalysis:
         with working_directory(self.WRF_DIR + '/ARWpost'):
             print('Cleaning ARWpost folder from output files')
             try:
+                os.system('rm wrfout_d*:00')
                 os.system('mv wrfout_*dat ' + self.output + '/arwpost_out')
                 os.system('mv wrfout_*ctl ' + self.output + '/arwpost_out')
             except:

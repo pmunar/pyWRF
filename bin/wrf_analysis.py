@@ -61,54 +61,60 @@ parser.add_argument('-clean', help="if selected, this option makes the program o
                     action='store_true')
 args = parser.parse_args()
 
-data_path, output_path, data_format, start_date, end_date, ndomains, group, hours_step, input_data_server, \
-parallel, ncores = get_config_parameters(args.config)
+config = get_config_parameters(args.config)
 
-if parallel == 'True' or parallel == 'y' or parallel == 'yes':
-    parallel = True
+if config[1]['parallel'] == 'True' or config[1]['parallel'] == 'y' or \
+                config[1]['parallel'] == 'yes':
+    config[1]['parallel'] = True
 else:
-    parallel = False
+    config[1]['parallel'] = False
 
 print('=========================================================')
 print('                     Summary')
 print('=========================================================')
-print('Path to the data:{}'.format(data_path))
-print('Input data server:{}'.format(input_data_server))
-print('Path to the WPS output:{}/wps_out'.format(output_path))
-print('Path to the WRF output:{}/wrf_out'.format(output_path))
-print('Path to the GRADS output:{}/grads_out'.format(output_path))
-print('Starting date of analysis:{}'.format(start_date))
-print('Ending date of analysis:{}'.format(end_date))
-print('Days in each subgroup of analysis:{}'.format(group))
-print('Parallel analysis: {}'.format(parallel))
+print('Path to the data:{}'.format(config[0]['data_path']))
+print('Input data server:{}'.format(config[0]['input_data_server']))
+print('Path to the WPS output:{}/wps_out'.format(config[0]['output_path']))
+print('Path to the WRF output:{}/wrf_out'.format(config[0]['output_path']))
+print('Path to the GRADS output:{}/grads_out'.format(config[0]['output_path']))
+print('Starting date of analysis:{}'.format(config[1]['start_date']))
+print('Ending date of analysis:{}'.format(config[1]['end_date']))
+print('Days in each subgroup of analysis:{}'.format(config[1]['group_of_days']))
+print('Parallel analysis: {}'.format(config[1]['parallel']))
 print('=========================================================')
 print('=========================================================')
 
 print('Unzipping files...')
-gunzip_and_rename_files(data_path, data_format)
-start_date_datetime = conf_date_to_datetime(start_date)
-end_date_datetime = conf_date_to_datetime(end_date)
+gunzip_and_rename_files(config[0]['data_path'], config[0]['data_format'])
+start_date_datetime = conf_date_to_datetime(config[1]['start_date'])
+end_date_datetime = conf_date_to_datetime(config[1]['end_date'])
 length_of_analysis = check_length_of_analysis(start_date_datetime, end_date_datetime)
 
 print('The total time of the analysis is {} days {} hours'.format(length_of_analysis[0], length_of_analysis[1]))
 
-number_of_groups = divmod(length_of_analysis[0], group)
+number_of_groups = divmod(length_of_analysis[0], int(config[1]['group_of_days']))
 
 start_time = start_date_datetime
 for n in range(number_of_groups[0] + 1):
-    stop_time = get_stop_date_for_processing(start_time, group)
+    stop_time = get_stop_date_for_processing(start_time, int(config[1]['group_of_days']))
     if n == range(number_of_groups[0] + 1)[-1]:
         stop_time = get_stop_date_for_processing_last_group(end_date_datetime)
     print('Group {}'.format(n +1))
     print('Analyzing times between {} and {}'.format(start_time, stop_time))
-    analysis = RunAnalysis(start_time, stop_time, data_path, output_path, data_format,
-                           ndomains, hours_step, input_data_server, bool(parallel), ncores)
+    analysis = RunAnalysis(start_time, stop_time, config[0]['data_path'], config[0]['output_path'],
+                           config[0]['data_format'], int(config[1]['num_domains']), int(config[0]['hours_step']),
+                           config[0]['input_data_server'], config[1]['parallel'], int(config[1]['ncores']))
 
-    if args.wps:
+    if args.wps and args.wrf:
+        analysis.run_wps()
+        analysis.run_WRF()
+        start_time = stop_time + datetime.timedelta(hours=6)
+        continue
+    elif args.wps and not args.wrf:
         analysis.run_wps()
         start_time = stop_time + datetime.timedelta(hours=6)
         continue
-    elif args.wrf:
+    elif args.wrf and not args.wps:
         analysis.run_WRF()
         start_time = stop_time + datetime.timedelta(hours=6)
         continue
@@ -118,11 +124,6 @@ for n in range(number_of_groups[0] + 1):
         continue
     elif args.clean:
         analysis.clean_directories()
-        start_time = stop_time + datetime.timedelta(hours=6)
-        continue
-    elif args.wps and args.wrf:
-        analysis.run_wps()
-        analysis.run_WRF()
         start_time = stop_time + datetime.timedelta(hours=6)
         continue
     else:

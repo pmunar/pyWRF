@@ -218,7 +218,7 @@ class RunAnalysis:
 
         fields = ['run_days', 'run_hours', 'start_year', 'start_month', 'start_day', 'start_hour', 'end_year', 'end_month', 'end_day',
                   'end_hour', 'interval_seconds']
-        values = [self.timespan.days, self.timespan.seconds/3600., self.start_date, self.start_date, self.start_date, self.start_date, self.end_date, self.end_date,
+        values = [int(self.timespan.days), int(self.timespan.seconds/3600), self.start_date, self.start_date, self.start_date, self.start_date, self.end_date, self.end_date,
                   self.end_date, self.end_date, self.interval_seconds]
         for f, v in zip(fields,values):
             self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.input', f, self._write_new_text_for_line_wrf(f, v))

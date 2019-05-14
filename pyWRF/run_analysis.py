@@ -36,6 +36,7 @@ class RunAnalysis:
         self.num_domains = num_domains
         self.parallel = parallel
         self.ncores = ncores
+        self.timespan = self.end_date - self.start_date
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
         self.WORK_DIR = self.input_data_dir
@@ -72,6 +73,12 @@ class RunAnalysis:
         :param value: datetime.datetime object or integer or float
         :return: field_to_write. String. New line corresponding to the field and its new value
         """
+        if field == 'run_days':
+            field_to_write = ' {:s}                           = {:d},\n'.format(field, value)
+
+        if field == 'run_hours':
+            field_to_write = ' {:s}                           = {:d},\n'.format(field, value)
+
         if field == 'start_year':
             field_to_write = ' {:s}                          = {:d}, {:d}, {:d},\n'.format(field, value.year,
                                                                                            value.year, value.year)
@@ -209,9 +216,9 @@ class RunAnalysis:
         that are taken from the input parameters of the RunAnalysis Class.
         """
 
-        fields = ['start_year', 'start_month', 'start_day', 'start_hour', 'end_year', 'end_month', 'end_day',
+        fields = ['run_days', 'run_hours', 'start_year', 'start_month', 'start_day', 'start_hour', 'end_year', 'end_month', 'end_day',
                   'end_hour', 'interval_seconds']
-        values = [self.start_date, self.start_date, self.start_date, self.start_date, self.end_date, self.end_date,
+        values = [self.timespan.days, self.timespan.seconds/3600., self.start_date, self.start_date, self.start_date, self.start_date, self.end_date, self.end_date,
                   self.end_date, self.end_date, self.interval_seconds]
         for f, v in zip(fields,values):
             self._replacefield(self.WRF_DIR + '/WRFV3/test/em_real/namelist.input', f, self._write_new_text_for_line_wrf(f, v))

@@ -294,12 +294,11 @@ class RunAnalysis:
             day = value.day
             hour = value.hour
             date_to_write = '{:d}-{:02d}-{:02d}_{:02d}:00:00'.format(year, month, day, hour)
-            date_to_write_in = '{:d}-{:02d}-{:02d}_{:02d}:00:00'.format(year, month, day, hour)
             date_to_write_out = '{:d}-{:02d}-{:02d}_{:02d}_00_00'.format(year, month, day, hour)
             if field == 'start_date' or field == 'end_date':
                 new_line = ' ' + field + " = '" + date_to_write + "',\n"
             elif field == 'input_root_name':
-                new_line = ' ' + field + " = './wrfout_d0"+str(domain)+"_" + date_to_write_in + "'\n"
+                new_line = ' ' + field + " = './wrfout_d0"+str(domain)+"_" + date_to_write + "'\n"
             elif field == 'output_root_name':
                 new_line = ' ' + field + " = './wrfout_d0" + str(domain) + "_" + date_to_write_out + "'\n"
             return new_line

@@ -287,10 +287,14 @@ class RunAnalysis:
             day = value.day
             hour = value.hour
             date_to_write = '{:d}-{:02d}-{:02d}_{:02d}:00:00'.format(year, month, day, hour)
+            date_to_write_in = '{:d}-{:02d}-{:02d}_{:02d}:00:00'.format(year, month, day, hour)
+            date_to_write_out = '{:d}-{:02d}-{:02d}_{:02d}_00_00'.format(year, month, day, hour)
             if field == 'start_date' or field == 'end_date':
                 new_line = ' ' + field + " = '" + date_to_write + "',\n"
-            elif field == 'input_root_name' or field == 'output_root_name':
-                new_line = ' ' + field + " = './wrfout_d0"+str(domain)+"_" + date_to_write + "'\n"
+            elif field == 'input_root_name':
+                new_line = ' ' + field + " = './wrfout_d0"+str(domain)+"_" + date_to_write_in + "'\n"
+            elif field == 'output_root_name':
+                new_line = ' ' + field + " = './wrfout_d0" + str(domain) + "_" + date_to_write_out + "'\n"
             return new_line
         elif type(value) == int or type(value) == float:
             new_line = ' ' + field + " = " + str(value) + ',\n'
@@ -303,7 +307,7 @@ class RunAnalysis:
         class
         """
         fields = ['start_date', 'end_date', 'interval_seconds', 'input_root_name', 'output_root_name']
-        values = [self.start_date, self.end_date, self.interval_seconds, self.start_date, self.end_date]
+        values = [self.start_date, self.end_date, self.interval_seconds, self.start_date, self.start_date]
         for f, v in zip(fields, values):
             self._replacefield(self.WRF_DIR + '/ARWpost/namelist.ARWpost', f,
                                self._write_new_text_for_line_arwpost(f, v, ndom))

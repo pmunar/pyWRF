@@ -3,6 +3,7 @@ import os
 import sys
 from pyWRF.utils import working_directory
 from pyWRF import environ
+import multiprocessing
 
 
 class RunAnalysis:
@@ -40,6 +41,13 @@ class RunAnalysis:
 
         self.WRF_DIR = environ.DIRS.get('WRF_DIR')
         self.WORK_DIR = self.input_data_dir
+
+    def _check_ncores(self):
+        if self.ncores > multiprocessing.cpu_count():
+            self.ncores = multiprocessing.cpu_count()-1
+            print('A number of CPUs higher than the available number of CPUs was selected.\n Falling back to '
+                  'the maximum possible number of CPUs minus one: {} CPUs'.format(self.ncores))
+        return self.ncores
 
     def _write_new_text_for_line_wps(self, field, value):
         """
@@ -238,6 +246,7 @@ class RunAnalysis:
             self._change_WRF_namelist_input_file()
             print('Running real.exe')
             if self.parallel:
+                self.ncores = self._check_ncores()
                 os.system('mpirun -np {} ./real.exe'.format(str(self.ncores)))
             else:
                 os.system('./real.exe')
@@ -261,6 +270,7 @@ class RunAnalysis:
 
             print('Running wrf.exe')
             if self.parallel:
+                self.ncores = self._check_ncores()
                 os.system('mpirun -np {} ./wrf.exe'.format(str(self.ncores)))
             else:
                 os.system('./wrf.exe')

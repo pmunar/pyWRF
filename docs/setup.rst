@@ -54,6 +54,18 @@ or
 
 Once you have all the needed Python libraries you can proceed to install pyWRF.
 
+Parallel execution
+------------------
+
+If you plan on running your analysis in parallel with more than one CPU, you should also install the OpenMPI library. For instance, in Ubuntu you can do it by typing in your terminal:
+
+.. code-block:: bash
+
+    > sudo apt-get install openmpi-bin openmpi-common openssh-client openssh-server libopenmpi1.3 libopenmpi-dbg libopenmpi-dev
+
+For installation in other operative systems, please referr to the `OpenMPI website <https://www.open-mpi.org/>`__.
+
+
 Install pyWRF
 -------------
 

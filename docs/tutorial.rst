@@ -25,24 +25,24 @@ For this case, we need to change the parameters in the Data section and in the A
 
 .. code-block:: bash
 
-	[Data]
+    [Data]
 
     data_path = /home/wrf_analysis/data
     output_path = /home/wrf_analysis/
-	input_data_server = GDAS
-	data_format = grib2
-	hours_step = 6
+    input_data_server = GDAS
+    data_format = grib2
+    hours_step = 6
 
-	[Analysis]
+    [Analysis]
 
-	start_date = "2012-01-01_00_00"
-	end_date   = "2012-01-07_00_00"
-	num_domains = 3
-	group_of_days = 5
-	parallel = False
-	#only useful if parallel = True
-	ncores = 4
-	tag = My_analysis_test
+    start_date = "2012-01-01_00_00"
+    end_date   = "2012-01-07_00_00"
+    num_domains = 3
+    group_of_days = 5
+    parallel = False
+    #only useful if parallel = True
+    ncores = 4
+    tag = My_analysis_test
 
 
 This way we told the program where our data is (data_path), where do we want the outputs (output_path), which is the format of the input GDAS files (data_format), the stard and end dates of the whole analysis and how many days do we want to analyze in a single push (group_of_days).

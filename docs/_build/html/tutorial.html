@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Tutorial &#8212; pyWRF 0.1 documentation</title>
-    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -24,16 +24,9 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="&lt;no title&gt;" href="config_file.html" />
-    <link rel="prev" title="Setup" href="setup.html" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
-<!--[if lte IE 6]>
-<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
-<![endif]-->
-
+    <link rel="prev" title="Setup" href="setup.html" /> 
   </head>
   <body>
-
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -72,33 +65,42 @@
 
 <span class="nv">data_path</span> <span class="o">=</span> /home/wrf_analysis/data
 <span class="nv">output_path</span> <span class="o">=</span> /home/wrf_analysis/
+<span class="nv">input_data_server</span> <span class="o">=</span> GDAS
 <span class="nv">data_format</span> <span class="o">=</span> grib2
+<span class="nv">hours_step</span> <span class="o">=</span> <span class="m">6</span>
 
 <span class="o">[</span>Analysis<span class="o">]</span>
 
 <span class="nv">start_date</span> <span class="o">=</span> <span class="s2">&quot;2012-01-01_00_00&quot;</span>
 <span class="nv">end_date</span>   <span class="o">=</span> <span class="s2">&quot;2012-01-07_00_00&quot;</span>
+<span class="nv">num_domains</span> <span class="o">=</span> <span class="m">3</span>
 <span class="nv">group_of_days</span> <span class="o">=</span> <span class="m">5</span>
 <span class="nv">parallel</span> <span class="o">=</span> False
-<span class="nv">tag</span> <span class="o">=</span> <span class="s2">&quot;My_analysis_test&quot;</span>
+<span class="c1">#only useful if parallel = True</span>
+<span class="nv">ncores</span> <span class="o">=</span> <span class="m">4</span>
+<span class="nv">tag</span> <span class="o">=</span> My_analysis_test
 </pre></div>
 </div>
-<p>This way we told the program where our data is (data_path), where do we want the outputs (output_path), which is the format of the input GDAS files (data_format), the stard and end dates of the whole analysis (group_of_days)</p>
+<p>This way we told the program where our data is (data_path), where do we want the outputs (output_path), which is the format of the input GDAS files (data_format), the stard and end dates of the whole analysis and how many days do we want to analyze in a single push (group_of_days).</p>
 <p>Now we just need to run another command to start the analysis:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; wrf_analysis config_file.conf
 </pre></div>
 </div>
-<p>If you run the command like this, with no optional parameters, it will run all the PREPROCESSING and the WRF scripts. At the end, it will copy all the output files into the wps_out and wrf_out directories, under your working directory (/home/wrf_analysis/ in this case). If these directories do not exist, the program creates them.</p>
+<p>If you run the command like this, with no optional parameters, it will run all the PREPROCESSING, the WRF scripts and the ARWpost scripts. At the end, it will copy all the output files into the wps_out, wrf_out and arwpost_out directories, under your working directory (/home/wrf_analysis/ in this case). If these directories do not exist, the program creates them.</p>
 <p>The program, in this case, will take all the data and divide it into groups of 5 days (as specified by the group_of_days parameter), and analyze each group together. If the last group is shorter than the group_of_days parameter, the program simply takes the remaining data and analizes it.</p>
 <p>If you want to run only a part of the program, e.g. the PREPROCESSING, you can call it like this:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; wrf_analysis config_file.conf --wps
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; wrf_analysis config_file.conf -wps
 </pre></div>
 </div>
+<p>The same can be done if you want just to run the wrf or the arwpost parts of the analysis. Note that in these cases, the files that the program needs, need to be in the corresponding folder in the $WRF_DIR.</p>
 <p>After completion, the outputs will not be moved to the output directory, since they might be needed for other parts of the analysis process.</p>
 <p>In order to move all outputs into the working directory, you can do:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; wrf_analysis config_file.conf --clean
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; wrf_analysis config_file.conf -clean
 </pre></div>
 </div>
+<p>Since the postprocessing and outputs that WRF can deliver are too wide, pyWRF only provides a tool for postprocessing that was needed by us when we developed it.
+If you need other features, you can <a class="reference external" href="mailto:pere&#46;munar&#37;&#52;&#48;uab&#46;cat">contact me</a> or you can try to include it into the code yourself, by creating a new branch on the GitHub repository. It will be very welcome!</p>
+<p>There is another Python package available that performs astounding plots and visualizations for the outputs of the WRF software. It is called <a class="reference external" href="https://github.com/NCAR/wrf-python">wrf-python</a> and you can find its <a class="reference external" href="https://wrf-python.readthedocs.io/en/latest/index.html">documentation here</a>.</p>
 </div>
 
 

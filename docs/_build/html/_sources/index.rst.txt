@@ -24,8 +24,6 @@ Up to now, this package woks only with the em_real analysis of input data with W
    config_file
    tools
 
-
-
 Indices and tables
 ==================
 

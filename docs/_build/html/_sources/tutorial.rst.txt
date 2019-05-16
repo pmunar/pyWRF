@@ -29,17 +29,23 @@ For this case, we need to change the parameters in the Data section and in the A
 
     data_path = /home/wrf_analysis/data
     output_path = /home/wrf_analysis/
+    input_data_server = GDAS
     data_format = grib2
+    hours_step = 6
 
     [Analysis]
 
     start_date = "2012-01-01_00_00"
     end_date   = "2012-01-07_00_00"
+    num_domains = 3
     group_of_days = 5
     parallel = False
-    tag = "My_analysis_test"
+    #only useful if parallel = True
+    ncores = 4
+    tag = My_analysis_test
 
-This way we told the program where our data is (data_path), where do we want the outputs (output_path), which is the format of the input GDAS files (data_format), the stard and end dates of the whole analysis (group_of_days)
+
+This way we told the program where our data is (data_path), where do we want the outputs (output_path), which is the format of the input GDAS files (data_format), the stard and end dates of the whole analysis and how many days do we want to analyze in a single push (group_of_days).
 
 Now we just need to run another command to start the analysis:
 
@@ -47,7 +53,7 @@ Now we just need to run another command to start the analysis:
 
     > wrf_analysis config_file.conf
 
-If you run the command like this, with no optional parameters, it will run all the PREPROCESSING and the WRF scripts. At the end, it will copy all the output files into the wps_out and wrf_out directories, under your working directory (/home/wrf_analysis/ in this case). If these directories do not exist, the program creates them.
+If you run the command like this, with no optional parameters, it will run all the PREPROCESSING, the WRF scripts and the ARWpost scripts. At the end, it will copy all the output files into the wps_out, wrf_out and arwpost_out directories, under your working directory (/home/wrf_analysis/ in this case). If these directories do not exist, the program creates them.
 
 The program, in this case, will take all the data and divide it into groups of 5 days (as specified by the group_of_days parameter), and analyze each group together. If the last group is shorter than the group_of_days parameter, the program simply takes the remaining data and analizes it.
 
@@ -55,7 +61,9 @@ If you want to run only a part of the program, e.g. the PREPROCESSING, you can c
 
 .. code-block:: bash
 
-    > wrf_analysis config_file.conf --wps
+    > wrf_analysis config_file.conf -wps
+
+The same can be done if you want just to run the wrf or the arwpost parts of the analysis. Note that in these cases, the files that the program needs, need to be in the corresponding folder in the $WRF_DIR.
 
 After completion, the outputs will not be moved to the output directory, since they might be needed for other parts of the analysis process.
 
@@ -63,4 +71,9 @@ In order to move all outputs into the working directory, you can do:
 
 .. code-block:: bash
 
-    > wrf_analysis config_file.conf --clean
+    > wrf_analysis config_file.conf -clean
+
+Since the postprocessing and outputs that WRF can deliver are too wide, pyWRF only provides a tool for postprocessing that was needed by us when we developed it. 
+If you need other features, you can `contact me <pere.munar@uab.cat>`__ or you can try to include it into the code yourself, by creating a new branch on the GitHub repository. It will be very welcome!
+
+There is another Python package available that performs astounding plots and visualizations for the outputs of the WRF software. It is called `wrf-python <https://github.com/NCAR/wrf-python>`__ and you can find its `documentation here <https://wrf-python.readthedocs.io/en/latest/index.html>`__. 

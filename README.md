@@ -1,4 +1,7 @@
 # pyWRF
+
+See the documentation here: https://pywrf.readthedocs.io/en/latest/index.html
+
 Python package to work with WRF software in an easy way
 
 Be sure to have permission to edit the following files:

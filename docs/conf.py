@@ -87,7 +87,7 @@ todo_include_todos = False
 # a list of builtin themes.
 #
 #import sphinx_theme
-html_theme = 'neo_rtd_theme'
+html_theme = 'default'
 #html_theme_path = sphinx_theme.get_html_themes_path()
 
 # Theme options are theme-specific and customize the look and feel of a theme

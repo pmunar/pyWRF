@@ -13,8 +13,9 @@
 export WRF_WPS_DIR=$WRF_DIR/WPS
 export WRF_WRFV3_DIR=$WRF_DIR/WRFV3
 export WRF_ARWpost_DIR=$WRF_DIR/ARWpost
+export OPEN_GRADS_DIR=/opt/opengrads
 
-export PATH=$PATH:$PYWRF_DIR:$PYWRF_DIR/bin:$PYWRF_DIR/pyWRF
+export PATH=$PATH:$PYWRF_DIR:$PYWRF_DIR/bin:$PYWRF_DIR/pyWRF:$OPEN_GRADS_DIR
 export PYTHONPATH=$PYWRF_DIR:$PYWRF_DIR/bin:$PYWRF_DIR/pyWRF:$PYTHONPATH
 
 if [ -d "/usr/lib64/openmpi/" ]

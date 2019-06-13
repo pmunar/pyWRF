@@ -78,7 +78,7 @@ def read_grads_output(gradsout):
         final_file.close()
 
 
-def create_final_grads_table(intermediate_table, final_table):
+def create_final_grads_table(gradsout, final_table):
 
     if os.path.exists(final_table):
         print('Output file %s already exists. Aborting.' % (final_table))
@@ -90,10 +90,11 @@ def create_final_grads_table(intermediate_table, final_table):
     it = pd.read_csv(intermediate_table, sep=' ')
     #print('Date year month day hour MJD P Temp h n n/Ns U V wind_speed wind_direction RH', file=ft)
     it['n'] = computedensity(it['P'], it['T'])
-    it['year'] = df['date'].apply(lambda x: str(x)[:4])
-    it['month'] = df['date'].apply(lambda x: str(x)[4:6])
-    it['day'] = df['date'].apply(lambda x: str(x)[6:8])
-    it['MJD'] = date2mjd(it['year'], it['month'], it['day'], it['hour'])
+    it['year'] = it['Date'].apply(lambda x: str(x)[:4])
+    it['month'] = it['Date'].apply(lambda x: str(x)[4:6])
+    it['day'] = it['Date'].apply(lambda x: str(x)[6:8])
+    df['datetime'] = pd.to_datetime(df.apply(lambda x: str(x['year']) + '-' + str(x['month']) + '-' + str(x['day']) + '-' + str(x['hour']), axis=1))
+    it['MJD'] = date2mjd(int(it['year']), int(it['month']), int(it['day']), int(it['hour']))
     it['n/Ns'] = it['n']/Ns
     it['wind_speed'] = compute_wind_speed(it['U'], it['V'])
     it['wind_direction'] = compute_wind_direction(it['U'], it['V'])
@@ -125,7 +126,7 @@ def merge_txt_from_grib(txtfile, output_file='merged_from_single_grads_outputs.t
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--file', action='store_true', help='the grads output to convert to dataframe')
+parser.add_argument('-f', '--file', help='the grads output to convert to dataframe')
 parser.add_argument('-m', '--merge', nargs='+', help='followed by a filename containing a list of txt files\n '
                                                      ' it merges them into a single txt file')
 
@@ -133,6 +134,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print(args)
     if args.file:
+        print('the file to process is:', args.file)
         create_final_grads_table(args.file, os.path.splitext(args.file)[0]+'final_table.txt')
     elif args.merge:
         merge_txt_from_grib(args.file)

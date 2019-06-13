@@ -2,6 +2,9 @@
 
 from pyWRF.meteo_utils.metorological_constants import *
 import pandas as pd
+import os
+import argparse
+
 
 def computedensity(p,T):
     return Ns * p / ps * Ts / T
@@ -80,6 +83,9 @@ def create_final_grads_table(intermediate_table, final_table):
     if os.path.exists(final_table):
         print('Output file %s already exists. Aborting.' % (final_table))
         sys.exit()
+    else:
+        read_grads_output(gradsout)
+        intermediate_table = os.path.splitext(gradsout)[0]+'.txt'
 
     it = pd.read_csv(intermediate_table, sep=' ')
     #print('Date year month day hour MJD P Temp h n n/Ns U V wind_speed wind_direction RH', file=ft)
@@ -117,10 +123,11 @@ def merge_txt_from_grib(txtfile, output_file='merged_from_single_grads_outputs.t
     lf.close()
     outfile.close()
 
+
 parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--file', action='store_true', help='the grads output to convert to dataframe'
-parser.add_argument('-m', '-merge', nargs='+', help='followed by a filename containing a list of txt files, \n '
-                                   'it merges them into a single txt file')
+parser.add_argument('-f', '--file', action='store_true', help='the grads output to convert to dataframe')
+parser.add_argument('-m', '--merge', nargs='+', help='followed by a filename containing a list of txt files\n '
+                                                     ' it merges them into a single txt file')
 
 if __name__ == "__main__":
     args = parser.parse_args()

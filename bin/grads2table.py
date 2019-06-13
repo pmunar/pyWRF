@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from pyWRF.meteo_utils.metorological_constants import *
 import pandas as pd
 

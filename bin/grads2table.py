@@ -10,26 +10,20 @@ def computedensity(p,T):
     return Ns * p / ps * Ts / T
 
 
-def date2mjd(yyyy, mm, dd, hh, min=0, ss=0):
+def date2mjd(df):
     """
     This function computes the mjd value corresponding to an input date, in the year, month, day, hour format
 
-    Input:
-        (integers) year, month, day and hour.
-        Optionals: minutes and seconds. If left blank, they are assumed equal 0
+    Input: dataframe
 
     Output:
         (float) mjd
     """
     from astropy.time import Time
-    y = str(int(yyyy))
-    m = '{0:02}'.format(int(mm))
-    d = '{0:02}'.format(int(dd))
-    h = '{0:02}'.format(int(hh))
-    mi = '{0:02}'.format(int(min))
-    s = '{0:02}'.format(int(ss))
-    t = Time(y + '-' + m + '-' + d + 'T' + h + ':' + mi + ':' + s, format='isot', scale='utc')
-    return round(t.mjd, 2)
+    df['MJD'] = df.apply(lambda x: Time(str(x['year']) + '-' + str(x['month']) + '-' + str(x['day']) +
+                            ' {0:02}'.format(x['hour'])+':00:00').mjd, axis=1)
+
+    return df
 
 
 def compute_wind_direction(u,v):
@@ -93,11 +87,10 @@ def create_final_grads_table(gradsout, final_table):
     it['year'] = it['Date'].apply(lambda x: str(x)[:4])
     it['month'] = it['Date'].apply(lambda x: str(x)[4:6])
     it['day'] = it['Date'].apply(lambda x: str(x)[6:8])
-    df['datetime'] = pd.to_datetime(df.apply(lambda x: str(x['year']) + '-' + str(x['month']) + '-' + str(x['day']) + '-' + str(x['hour']), axis=1))
-    it['MJD'] = date2mjd(int(it['year']), int(it['month']), int(it['day']), int(it['hour']))
     it['n/Ns'] = it['n']/Ns
     it['wind_speed'] = compute_wind_speed(it['U'], it['V'])
     it['wind_direction'] = compute_wind_direction(it['U'], it['V'])
+    date2mjd(it)
 
     it.to_csv(final_table, sep=' ')
 

@@ -149,4 +149,4 @@ if __name__ == "__main__":
         os.system('grads -bpcx cta_data5.gs.temp')
         create_final_grads_table(args.file, os.path.splitext(args.file)[0]+'final_table.txt')
     elif args.merge:
-        merge_txt_from_grib(args.file)
+        merge_txt_from_grib(args.merge)

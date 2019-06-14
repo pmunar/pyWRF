@@ -42,7 +42,7 @@ def compute_wind_speed(u,v):
 def convert_grads_date_to_yyyymmdd(file_date):
     months = {'JAN':1, 'FEB':2, 'MAR':3,
           'APR':4, 'MAY':5, 'JUN':6,
-          'JUL':7, 'AGO':8, 'SEP':9,
+          'JUL':7, 'AUG':8, 'SEP':9,
           'OCT':10, 'NOV':11, 'DEC':12}
     hour = file_date[:2]
     file_date = file_date[-9:]

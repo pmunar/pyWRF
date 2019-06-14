@@ -118,6 +118,22 @@ def merge_txt_from_grib(txtfile, output_file='merged_from_single_grads_outputs.t
     lf.close()
     outfile.close()
 
+def modify_grads_script(input_file, grads_script):
+    with open(grads_script, 'r') as gs:
+        gst = open(grads_script+'.temp', 'w')
+        lines = gs.readlines()
+        new_lines = []
+        for l in lines:
+            new_lines.append(l[:-1])
+        lines = new_lines
+        lines[0] = lines[0].split(' ')[0] + ' '+ os.path.splitext(input_file)[0]+"'"
+        lines[13] = lines[13].split('(')[0] + "('" + os.path.splitext(input_file)[0] + ".txt'," + lines[13].split(',')[1]
+        ll = [26, 29, 32, 35, 38, 41, 44, 47]
+        for l in ll:
+            lines[l] = lines[l].split('(')[0] + "('" + os.path.splitext(input_file)[0] + ".txt'," + lines[l].split(',')[1] + ',append)'
+        for l in lines:
+            print(l, file=gst)
+        gst.close()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--file', help='the grads output to convert to dataframe')
@@ -129,6 +145,7 @@ if __name__ == "__main__":
     print(args)
     if args.file:
         print('the file to process is:', args.file)
+        modify_grads_script(args.file, 'cta_data5.gs')
         create_final_grads_table(args.file, os.path.splitext(args.file)[0]+'final_table.txt')
     elif args.merge:
         merge_txt_from_grib(args.file)

@@ -84,7 +84,7 @@ def create_final_grads_table(gradsout, final_table):
 
     it = pd.read_csv(intermediate_table, sep=' ')
     #print('Date year month day hour MJD P Temp h n n/Ns U V wind_speed wind_direction RH', file=ft)
-    it['n'] = computedensity(it['P'], it['T'])
+    it['n'] = computedensity(it['P']/100., it['T'])
     it['year'] = it['Date'].apply(lambda x: str(x)[:4])
     it['month'] = it['Date'].apply(lambda x: str(x)[4:6])
     it['day'] = it['Date'].apply(lambda x: str(x)[6:8])

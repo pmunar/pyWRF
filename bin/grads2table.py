@@ -137,7 +137,7 @@ def modify_grads_script(input_file, grads_script):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--file', help='the grads output to convert to dataframe')
-parser.add_argument('-m', '--merge', nargs='+', help='followed by a filename containing a list of txt files\n '
+parser.add_argument('-m', '--merge', help='followed by a filename containing a list of txt files\n '
                                                      ' it merges them into a single txt file')
 
 if __name__ == "__main__":

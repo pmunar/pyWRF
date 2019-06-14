@@ -4,6 +4,8 @@ from pyWRF.meteo_utils.metorological_constants import *
 import pandas as pd
 import os
 import argparse
+import sys
+import numpy as np
 
 
 def computedensity(p,T):
@@ -28,8 +30,7 @@ def date2mjd(df):
 
 def compute_wind_direction(u,v):
     angle = np.arctan2(-1*u,-1*v)*180./np.pi
-    if angle < 0.:
-        angle += 360.
+    angle[angle < 0] +=360
     direction = angle
     return direction
 
@@ -90,9 +91,9 @@ def create_final_grads_table(gradsout, final_table):
     it['n/Ns'] = it['n']/Ns
     it['wind_speed'] = compute_wind_speed(it['U'], it['V'])
     it['wind_direction'] = compute_wind_direction(it['U'], it['V'])
-    date2mjd(it)
+    it = date2mjd(it)
 
-    it.to_csv(final_table, sep=' ')
+    it.to_csv(final_table, sep=' ', index=False)
 
 def merge_txt_from_grib(txtfile, output_file='merged_from_single_grads_outputs.txt'):
     lf = open(txtfile, 'r')

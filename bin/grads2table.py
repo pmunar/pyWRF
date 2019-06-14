@@ -146,6 +146,7 @@ if __name__ == "__main__":
     if args.file:
         print('the file to process is:', args.file)
         modify_grads_script(args.file, 'cta_data5.gs')
+        os.system('grads -bpcx cta_data5.gs.temp')
         create_final_grads_table(args.file, os.path.splitext(args.file)[0]+'final_table.txt')
     elif args.merge:
         merge_txt_from_grib(args.file)

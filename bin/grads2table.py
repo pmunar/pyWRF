@@ -92,7 +92,8 @@ def create_final_grads_table(gradsout, final_table):
     it['wind_speed'] = compute_wind_speed(it['U'], it['V'])
     it['wind_direction'] = compute_wind_direction(it['U'], it['V'])
     it = date2mjd(it)
-
+    it.sort_values(by='P', inplace=True)
+    it['P'] = it['P'].round(1) 
     it.to_csv(final_table, sep=' ', index=False)
 
 def merge_txt_from_grib(txtfile, output_file='merged_from_single_grads_outputs.txt'):

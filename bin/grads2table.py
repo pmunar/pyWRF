@@ -67,7 +67,7 @@ def read_grads_output(gradsout):
                 line_to_print.append(l)
                 continue
             line_to_print.append(float(l[:-1]))
-            if len(line_to_print) == 9:
+            if len(line_to_print) == 10:
                 print(*line_to_print, file=final_file)
                 line_to_print = []
         final_file.close()

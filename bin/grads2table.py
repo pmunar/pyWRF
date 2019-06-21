@@ -60,7 +60,7 @@ def read_grads_output(gradsout):
         lines = go.readlines()
         line_to_print = []
         final_file = open(os.path.splitext(gradsout)[0]+'.txt', 'w')
-        print('Date hour P T h 104dens U V wmr RH', file=final_file)
+        print('Date hour P T T2m h 104dens U V wmr RH', file=final_file)
         for i, l in enumerate(lines):
             if len(l[:-1]) == 12:
                 l = convert_grads_date_to_yyyymmdd(l[:-1])
@@ -129,7 +129,7 @@ def modify_grads_script(input_file, grads_script):
         lines = new_lines
         lines[0] = lines[0].split(' ')[0] + ' '+ os.path.splitext(input_file)[0]+"'"
         lines[13] = lines[13].split('(')[0] + "('" + os.path.splitext(input_file)[0] + ".txt'," + lines[13].split(',')[1]
-        ll = [26, 29, 32, 35, 38, 41, 44, 47]
+        ll = [26, 29, 32, 35, 38, 41, 44, 47, 50]
         for l in ll:
             lines[l] = lines[l].split('(')[0] + "('" + os.path.splitext(input_file)[0] + ".txt'," + lines[l].split(',')[1] + ',append)'
         for l in lines:

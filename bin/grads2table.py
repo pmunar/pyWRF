@@ -156,7 +156,7 @@ def modify_grads_script(input_file, grads_script):
             new_lines.append(l[:-1])
         lines = new_lines
         lines[0] = lines[0].split(' ')[0] + ' ' + infile + "'"
-        lines[5] = lines[5].split('=')[0] + "'" + infile + ".txt'"
+        lines[5] = lines[5].split('=')[0] + "='" + infile + ".txt'"
 
         for l in lines:
             print(l, file=gst)

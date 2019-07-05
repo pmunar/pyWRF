@@ -166,6 +166,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-f', '--file', help='the grads output to convert to dataframe')
 parser.add_argument('-m', '--merge', help='followed by a filename containing a list of txt files\n'
                                           ' it merges them into a single txt file')
+parser.add_argument('-s', '--surface', help='creates the table for surface values')
 
 if __name__ == "__main__":
     args = parser.parse_args()

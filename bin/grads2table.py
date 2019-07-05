@@ -82,7 +82,7 @@ def create_final_grads_table(gradsout, final_table):
         print('Output file %s already exists. Aborting.' % (final_table))
         sys.exit()
     else:
-        read_grads_output(gradsout)
+        read_grads_output(gradsout, lenout=9)
         intermediate_table = os.path.splitext(gradsout)[0]+'.txt'
 
     it = pd.read_csv(intermediate_table, sep=' ')
@@ -105,7 +105,7 @@ def create_surface_grads_table(gradsout, final_table):
         print('Output file %s already exists. Aborting.' % (final_table))
         sys.exit()
     else:
-        read_grads_output(gradsout)
+        read_grads_output(gradsout, lenout=6)
         intermediate_table = os.path.splitext(gradsout)[0]+'.txt'
 
     it = pd.read_csv(intermediate_table, sep=' ')

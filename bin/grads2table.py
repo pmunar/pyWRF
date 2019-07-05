@@ -63,7 +63,7 @@ def read_grads_output(gradsout, lenout=9):
         if lenout == 9:
             print('Date hour P T h 104dens U V wmr RH', file=final_file)
         elif lenout == 6:
-            print('Date hour P T U V Q', file=final_file)
+            print('Date hour T Q P U V', file=final_file)
         for i, l in enumerate(lines):
             if len(l[:-1]) == 12:
                 l = convert_grads_date_to_yyyymmdd(l[:-1])
@@ -98,6 +98,7 @@ def create_final_grads_table(gradsout, final_table):
     it.sort_values(by=['MJD','P'], inplace=True)
     it['P'] = it['P'].round(1) / 100.
     it.to_csv(final_table, sep=' ', index=False)
+    os.remove(os.path.splitext(gradsout)[0]+'.txt')
 
 def create_surface_grads_table(gradsout, final_table):
 

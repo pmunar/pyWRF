@@ -175,12 +175,14 @@ if __name__ == "__main__":
     if args.file:
         print('the file to process is:', args.file)
         if args.surface:
-            modify_grads_script(args.file, 'cta_data6.gs')
+            modify_grads_script(args.file, '$PYWRF_DIR/pyWRF/meteo_utils/cta_data6.gs')
             os.system('grads -bpcx cta_data6.gs.temp')
             create_surface_grads_table(args.file, os.path.splitext(args.file)[0]+'final_surface_table.txt')
+            os.remove('cta_data6.gs.temp')
         else:
-            modify_grads_script(args.file, 'cta_data5.gs')
+            modify_grads_script(args.file, '$PYWRF_DIR/pyWRF/meteo_utils/cta_data5.gs')
             os.system('grads -bpcx cta_data5.gs.temp')
             create_final_grads_table(args.file, os.path.splitext(args.file)[0]+'final_table.txt')
+            os.remove('cta_data5.gs.temp')
     elif args.merge:
         merge_txt_from_grib(args.merge)

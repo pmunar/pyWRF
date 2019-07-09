@@ -6,7 +6,7 @@
 outputfile='prova.txt'
 tt=1
 while(tt<=20)
-    level=775
+    level=800
     'set t 'tt
     while(level>=70)
         'set lev 'level

@@ -7,6 +7,10 @@ outputfile='density_prova.txt'
 tt=1
 while(tt<=20)
     'set t 'tt
+        'define tc=t2-273.15'
+        'define esat=6.11176750+tc*(0.443986062+tc*(0.0143053301+tc*(0.000265027242+tc*(0.00000302246994+tc*(0.0000000203886313+tc*0.0000000000638780966)))))'
+        'define qsat=0.622*(esat/(((psfc)/100)-esat))'
+        'define RH=(q2/qsat)'
         'q time'
         time=subwrd(result,3)
         dummy=write(outputfile,time)

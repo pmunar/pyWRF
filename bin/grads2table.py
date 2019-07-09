@@ -151,6 +151,7 @@ def modify_grads_script(input_file, grads_script):
     infile = os.path.splitext(input_file)[0]
     with open(grads_script, 'r') as gs:
         gst = open(os.getcwd()+grads_script.split('/')[-1]+'.temp', 'w')
+        print(os.getcwd()+grads_script.split('/')[-1])
         lines = gs.readlines()
         new_lines = []
         for l in lines:

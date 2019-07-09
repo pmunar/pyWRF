@@ -63,7 +63,7 @@ def read_grads_output(gradsout, lenout=9):
         if lenout == 9:
             print('Date hour P T h 104dens U V wmr RH', file=final_file)
         elif lenout == 6:
-            print('Date hour T Q P U V', file=final_file)
+            print('Date hour T RH P U V', file=final_file)
         for i, l in enumerate(lines):
             if len(l[:-1]) == 12:
                 l = convert_grads_date_to_yyyymmdd(l[:-1])

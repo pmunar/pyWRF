@@ -150,7 +150,7 @@ def merge_txt_from_grib(txtfile, output_file='merged_from_single_grads_outputs.t
 def modify_grads_script(input_file, grads_script):
     infile = os.path.splitext(input_file)[0]
     with open(grads_script, 'r') as gs:
-        gst = open(os.getcwd()+'/'+grads_script+'.temp', 'w')
+        gst = open(os.getcwd()+grads_script.split('/')[-1]+'.temp', 'w')
         lines = gs.readlines()
         new_lines = []
         for l in lines:

@@ -55,14 +55,14 @@ def convert_grads_date_to_yyyymmdd(file_date):
 # timestamp, P, T, h, 10^4n, u, v, wmr, RH
 
 
-def read_grads_output(gradsout, lenout=9):
+def read_grads_output(gradsout, lenout=10):
     with open(gradsout) as go:
         lines = go.readlines()
         line_to_print = []
         final_file = open(os.path.splitext(gradsout)[0]+'.txt', 'w')
-        if lenout == 9:
+        if lenout == 10:
             print('Date hour P T h 104dens U V wmr RH', file=final_file)
-        elif lenout == 6:
+        elif lenout == 7:
             print('Date hour T RH P U V', file=final_file)
         for i, l in enumerate(lines):
             if len(l[:-1]) == 12:

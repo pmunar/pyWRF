@@ -55,12 +55,12 @@ def convert_grads_date_to_yyyymmdd(file_date):
 # timestamp, P, T, h, 10^4n, u, v, wmr, RH
 
 
-def read_grads_output(gradsout, lenout=10):
+def read_grads_output(gradsout, lenout=9):
     with open(gradsout) as go:
         lines = go.readlines()
         line_to_print = []
         final_file = open(os.path.splitext(gradsout)[0]+'.txt', 'w')
-        if lenout == 10:
+        if lenout == 9:
             print('Date hour P T h 104dens U V wmr RH', file=final_file)
         elif lenout == 7:
             print('Date hour T RH P U V', file=final_file)
@@ -106,7 +106,7 @@ def create_surface_grads_table(gradsout, final_table):
         print('Output file %s already exists. Aborting.' % (final_table))
         sys.exit()
     else:
-        read_grads_output(gradsout, lenout=6)
+        read_grads_output(gradsout, lenout=7)
         intermediate_table = os.path.splitext(gradsout)[0]+'.txt'
 
     it = pd.read_csv(intermediate_table, sep=' ')

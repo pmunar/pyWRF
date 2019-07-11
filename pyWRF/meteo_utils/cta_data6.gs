@@ -17,7 +17,7 @@ while(tt<=20)
         'd t2'
         temp2m=sublin(result,2)
         dummy=write(outputfile,temp2m,append)
-        'd HGTsfc'
+        'd hgt'
         hsfc = sublin(result,2)
         dummy=write(outputfile,hsfc,append)
         'd RH'

@@ -173,13 +173,11 @@ parser.add_argument('-c', '--coordinates', nargs='+', help='lat and lon coordina
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    print(args)
     if args.file:
         print('the file to process is:', args.file)
         if args.surface:
             if args.coordinates:
                 lat, lon = args.coordinates
-                print(args.coordinates, type(args.coordinates))
                 modify_grads_script(args.file, os.environ['PYWRF_DIR']+'/pyWRF/meteo_utils/cta_data6.gs',
                                     lat=lat, lon=lon)
             else:

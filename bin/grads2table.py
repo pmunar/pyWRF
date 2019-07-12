@@ -145,7 +145,7 @@ def merge_txt_from_grib(txtfile, output_file='merged_from_single_grads_outputs.t
     outfile.close()
 
 
-def modify_grads_script(input_file, grads_script):
+def modify_grads_script(input_file, grads_script, lat=28.76, lon=342.12):
     infile = os.path.splitext(input_file)[0]
     with open(grads_script, 'r') as gs:
         gst = open(os.getcwd()+'/'+grads_script.split('/')[-1]+'.temp', 'w')
@@ -157,7 +157,8 @@ def modify_grads_script(input_file, grads_script):
         lines = new_lines
         lines[0] = lines[0].split(' ')[0] + ' ' + infile + "'"
         lines[5] = lines[5].split('=')[0] + "='" + infile + ".txt'"
-
+        lines[1] = lines[1].split('lat')[0] + 'lat ' + str(lat) +"'"
+        lines[2] = lines[2].split('lon')[0] + 'lon ' + str(lon) + "'"
         for l in lines:
             print(l, file=gst)
         gst.close()
@@ -167,6 +168,8 @@ parser.add_argument('-f', '--file', help='the grads output to convert to datafra
 parser.add_argument('-m', '--merge', help='followed by a filename containing a list of txt files\n'
                                           ' it merges them into a single txt file')
 parser.add_argument('-s', '--surface', action='store_true', help='creates the table for surface values')
+parser.add_argument('-c', '--coordinates', nargs='+', help='lat and lon coordinates of the place of interest, \n '
+                                                'in degrees')
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -174,12 +177,21 @@ if __name__ == "__main__":
     if args.file:
         print('the file to process is:', args.file)
         if args.surface:
-            modify_grads_script(args.file, os.environ['PYWRF_DIR']+'/pyWRF/meteo_utils/cta_data6.gs')
+            if args.coordinates:
+                print(args.coordinates, type(args.coordinates))
+#                modify_grads_script(args.file, os.environ['PYWRF_DIR']+'/pyWRF/meteo_utils/cta_data6.gs',
+#                                    lat=lat, lon=lon)
+            else:
+                modify_grads_script(args.file, os.environ['PYWRF_DIR'] + '/pyWRF/meteo_utils/cta_data6.gs')
             os.system('grads -bpcx cta_data6.gs.temp')
             create_surface_grads_table(args.file, os.path.splitext(args.file)[0]+'final_surface_table.txt')
             os.remove('cta_data6.gs.temp')
         else:
-            modify_grads_script(args.file, os.environ['PYWRF_DIR']+'/pyWRF/meteo_utils/cta_data5.gs')
+            if args.coordinates:
+                modify_grads_script(args.file, os.environ['PYWRF_DIR'] + '/pyWRF/meteo_utils/cta_data5.gs',
+                                    lat=lat, lon=lon)
+            else:
+                modify_grads_script(args.file, os.environ['PYWRF_DIR']+'/pyWRF/meteo_utils/cta_data5.gs')
             os.system('grads -bpcx cta_data5.gs.temp')
             create_final_grads_table(args.file, os.path.splitext(args.file)[0]+'final_table.txt')
             os.remove('cta_data5.gs.temp')

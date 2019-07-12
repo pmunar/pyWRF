@@ -32,21 +32,21 @@ It takes as inputs the ARWpost output files and can produce two distinct kind of
 
 * Table with several parameter values for the surface level at a certain coordinates
 
-* Date 
-* hour 
-* T 
-* RH 
-* P 
-* U 
-* V 
-* n 
-* year 
-* month 
-* day 
-* n/Ns 
-* wind_speed 
-* wind_direction 
-* MJD
+	* Date 
+	* hour 
+	* T 
+	* RH 
+	* P 
+	* U 
+	* V 
+	* n 
+	* year 
+	* month 
+	* day 
+	* n/Ns 
+	* wind_speed 
+	* wind_direction 
+	* MJD
 
 The surface level is determined by grads, taking into account the coordinates of interest and the geographycal information stored within the WRF package.
 

@@ -178,9 +178,10 @@ if __name__ == "__main__":
         print('the file to process is:', args.file)
         if args.surface:
             if args.coordinates:
+                lat, lon = args.coordinates
                 print(args.coordinates, type(args.coordinates))
-#                modify_grads_script(args.file, os.environ['PYWRF_DIR']+'/pyWRF/meteo_utils/cta_data6.gs',
-#                                    lat=lat, lon=lon)
+                modify_grads_script(args.file, os.environ['PYWRF_DIR']+'/pyWRF/meteo_utils/cta_data6.gs',
+                                    lat=lat, lon=lon)
             else:
                 modify_grads_script(args.file, os.environ['PYWRF_DIR'] + '/pyWRF/meteo_utils/cta_data6.gs')
             os.system('grads -bpcx cta_data6.gs.temp')
@@ -188,6 +189,7 @@ if __name__ == "__main__":
             os.remove('cta_data6.gs.temp')
         else:
             if args.coordinates:
+                lat, lon = args.coordinates
                 modify_grads_script(args.file, os.environ['PYWRF_DIR'] + '/pyWRF/meteo_utils/cta_data5.gs',
                                     lat=lat, lon=lon)
             else:

@@ -52,8 +52,6 @@ def convert_grads_date_to_yyyymmdd(file_date):
     new_date = year+'{:02d}'.format(months[month])+day+' '+hour
     return new_date
 
-# timestamp, P, T, h, 10^4n, u, v, wmr, RH
-
 
 def read_grads_output(gradsout, lenout=9):
     with open(gradsout) as go:
@@ -86,7 +84,6 @@ def create_final_grads_table(gradsout, final_table):
         intermediate_table = os.path.splitext(gradsout)[0]+'.txt'
 
     it = pd.read_csv(intermediate_table, sep=' ')
-    #print('Date year month day hour MJD P Temp h n n/Ns U V wind_speed wind_direction RH', file=ft)
     it['n'] = computedensity(it['P']/100., it['T'])
     it['year'] = it['Date'].apply(lambda x: str(x)[:4])
     it['month'] = it['Date'].apply(lambda x: str(x)[4:6])
@@ -100,6 +97,7 @@ def create_final_grads_table(gradsout, final_table):
     it.to_csv(final_table, sep=' ', index=False)
     os.remove(os.path.splitext(gradsout)[0]+'.txt')
 
+
 def create_surface_grads_table(gradsout, final_table):
 
     if os.path.exists(final_table):
@@ -110,7 +108,6 @@ def create_surface_grads_table(gradsout, final_table):
         intermediate_table = os.path.splitext(gradsout)[0]+'.txt'
 
     it = pd.read_csv(intermediate_table, sep=' ')
-    #print('Date year month day hour MJD P Temp h n n/Ns U V wind_speed wind_direction RH', file=ft)
     it['n'] = computedensity(it['P']/100., it['T'])
     it['year'] = it['Date'].apply(lambda x: str(x)[:4])
     it['month'] = it['Date'].apply(lambda x: str(x)[4:6])
@@ -146,6 +143,7 @@ def merge_txt_from_grib(txtfile, output_file='merged_from_single_grads_outputs.t
         line = lf.readline()
     lf.close()
     outfile.close()
+
 
 def modify_grads_script(input_file, grads_script):
     infile = os.path.splitext(input_file)[0]
